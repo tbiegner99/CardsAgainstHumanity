@@ -1,0 +1,9 @@
+.cardClass {
+    display: flex;
+    justify-content: center
+    
+}
+
+.scrollCard {
+    min-width:210px;
+}

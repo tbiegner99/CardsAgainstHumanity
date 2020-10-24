@@ -1,0 +1,24 @@
+.playerDisplay {
+    width:100%;
+    height:100%;
+}
+
+.headerRow, .playerRow {
+    height:30px;
+    border: 1px solid black;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.headerRow {
+    color:white;
+    background: black;
+    font-weight: bold;
+}
+
+.displayName {
+    padding-right:10px;
+    font-weight:bold;
+}

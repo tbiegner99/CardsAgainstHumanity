@@ -1,0 +1,72 @@
+* {
+    box-sizing: border-box;
+}
+.card {
+     height:300px;
+    font-weight: bold;
+    font-family:"Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif";
+}
+
+.bottomRow {
+    display: flex;
+    justify-content: space-between;
+}
+.backFace {
+    font-size:32px;
+}
+
+.frontFace {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.instruction {
+    font-size: 9px;
+    text-transform: capitalize;
+    display: flex;
+    justify-content: flex-end;
+    padding:2px 0px;
+}
+ .bottomRow  {
+    display:flex;
+    align-items: flex-end;
+}
+
+ .pack  {
+    display:flex;
+    align-items: center;
+}
+
+ .packIcon  {
+    width:15px;
+    height:15px;
+}
+
+.packTitle {
+    font-size: 8px;
+    font-weight: normal;
+}
+
+.numberCircle {
+    margin: 0px 2px;
+    border-radius:50%;
+    width:10px;
+    text-align: center;
+    display:inline-block
+}
+
+.blackCard {
+    background: black;
+    color:white;
+}
+.blackCard .numberCircle {
+    color:black;
+    background: white;
+}
+
+.whiteCard {
+    background: white;
+    color:black;
+}

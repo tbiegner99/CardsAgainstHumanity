@@ -1,0 +1,6 @@
+export default {
+  JOIN_GAME: 'JOIN',
+  CREATE_GAME: 'CREATE_GAME',
+  GAME_STATUS: 'GAME_STATUS',
+  GAME_STARTED: 'START_GAME'
+};

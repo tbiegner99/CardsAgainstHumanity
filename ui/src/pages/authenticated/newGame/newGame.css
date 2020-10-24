@@ -1,0 +1,9 @@
+.startButtonRow {
+    width:100%;
+    display: flex;
+    justify-content: center;
+}
+
+.playerPane {
+    padding-bottom:20px;
+}

@@ -1,0 +1,43 @@
+.iconButton {
+    padding:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width:200px;
+    height:200px;
+    border-radius: 5px;
+    border:1px solid black;
+    background: black;
+    color: white;
+    font-weight: bold;
+    font-size:16px;
+    cursor: pointer;
+}
+.iconButton:hover {
+    color: black;
+    background: #777;;
+}
+.iconButton:active {
+    color:black;
+    background: white;
+}
+
+@media (max-width: 600px) {
+    .iconButton {
+        width: 100%;
+        height: 40px;
+        flex-direction: row;
+        padding:0;
+    }
+    .icon {
+        padding: 0px 10px;
+    }
+
+    .title {
+        flex-grow:1;
+        padding: 0px 10px;
+        display: flex;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,15 @@
+.audiencePage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    flex-grow: 1;
+}
+.audiencePage button {
+    width:30vw;
+    margin:5vh;
+    font-size: 5vh;
+    padding:3vh 0;
+}

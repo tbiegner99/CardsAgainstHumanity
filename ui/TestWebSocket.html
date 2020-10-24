@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script
+		src="./lib/stomp.min.js"></script>
+	<script>
+        let client;
+        function onConnect() {
+           document.getElementById("status").innerHTML = ("Connected") 
+           document.getElementById("error").innerHTML = ("")
+        }
+
+        function onError(err) {
+            document.getElementById("status").innerText = ("Error") 
+            document.getElementById("error").innerHTML = (err)
+        }
+
+        function onDisconnect() {
+           $("#status").text("Not Connected") 
+        }
+        function setup() {
+            if(client) {
+                return
+            }
+             client = Stomp.client("ws://localhost:8080/joinGame");
+            client.connect({},onConnect,onError)
+        }
+    </script>
+    </head>
+    <body>
+        <BUTTON onclick="setup()">Connect</BUTTON>
+        <button onclick="destroy()">Disconnect</button>
+        <DIV id="status">
+            Not Connected
+            </DIV>
+            <div id="error"></div>
+    </body>
+</html>

@@ -1,0 +1,60 @@
+{
+  "blackCards": [
+    {
+      "text": "blackCard0",
+      "pick": 1
+    },
+    {
+      "text": "blackCard1",
+      "pick": 1
+    },
+    {
+      "text": "blackCard2",
+      "pick": 1
+    },
+    {
+      "text": "blackCard3",
+      "pick": 1
+    },
+    {
+      "text": "blackCard4",
+      "pick": 1
+    }
+  ],
+  "whiteCards": [
+    "card0",
+    "card1",
+    "card2",
+    "card3",
+    "card4"
+  ],
+  "testPack1": {
+    "name": "Test Package 1",
+    "black": [
+      0,
+      1
+    ],
+    "white": [
+      0,
+      1
+    ]
+  },
+  "testPack2": {
+    "name": "Test Package 2",
+    "black": [
+      2,
+      3,
+      4
+    ],
+    "white": [
+      2,
+      3,
+      4
+    ],
+    "icon": "paw"
+  },
+  "order": [
+    "testPack1",
+    "testPack2"
+  ]
+}

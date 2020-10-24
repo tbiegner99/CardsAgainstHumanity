@@ -1,0 +1,36 @@
+.cardSlider {
+    display: flex
+}
+.cardFrame {
+    flex-grow: 1;
+    height:300px;
+    overflow:hidden;
+    border:1px solid black;
+    position:relative;
+}
+
+.cardRow {
+    display: flex;
+    flex-wrap: nowrap;
+    transition: 500ms ease-in-out;
+    position: absolute;
+}
+
+.sliderCard {
+    padding: 0px 10px;
+}
+
+.arrow {
+    cursor: pointer;
+    width:20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.arrow.disabled {
+    visibility: hidden;
+}
+
+

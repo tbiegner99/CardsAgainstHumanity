@@ -1,0 +1,53 @@
+.gameOptionsMenu {
+    display: flex;
+    margin:0;
+    padding:0;
+    width:100%;
+}
+.gameOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:10px;
+    cursor:pointer;
+    color: white;
+    background:black;
+    font-weight: bold;
+    font-size: 14px;
+    border-right:1px solid #777;
+    width:25%;
+}
+@media(max-height:600px) {
+    .gameOption{
+    padding: 10px 0px 0px 0px;
+    }
+}
+
+.gameOption:hover {
+    background: #444;
+}
+
+.gameOption:active {
+    background: #333;
+}
+
+.gameOption .name {
+    font-size:10px;
+    padding:3px;
+}
+
+.status {
+    height:5px;
+    width:100%;
+    background:black;
+    position: absolute;
+}
+
+.selectedStatus {
+    position: relative;
+    height:100%;
+    width:25%;
+    background: blue;
+    transition: 500ms ease-in-out;
+}

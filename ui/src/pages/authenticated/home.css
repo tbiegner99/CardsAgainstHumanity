@@ -1,0 +1,21 @@
+.buttonsPanel {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+}
+.buttonsPanel > div{
+    flex-basis:33%;
+    padding: 15px 0px;
+}
+
+.title {
+    width:100%;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .buttonsPanel > div {
+        flex-basis:100%;
+    }
+}

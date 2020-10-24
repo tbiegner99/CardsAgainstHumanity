@@ -1,0 +1,24 @@
+.menuItem {
+    padding:10px;
+    display: flex;
+    align-items: center ;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menuTitle {
+    user-select: none;
+}
+
+.icon {
+    width:20px;
+    padding:10px;
+    display: flex;
+    align-items: center;
+}
+
+.menuItem:hover {
+    background: white;
+    color:black
+}

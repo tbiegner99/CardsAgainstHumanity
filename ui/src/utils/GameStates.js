@@ -1,0 +1,4 @@
+export default {
+  INITIALIZING: 'INITIALIZING',
+  GAME_STARTED: 'STARTED'
+};
