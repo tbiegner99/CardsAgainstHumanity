@@ -4,11 +4,11 @@ import style from './index.css';
 
 class Card extends React.Component {
   render() {
-    const { className, children, selected, width } = this.props;
+    const { className, children, selected, width, ...otherProps } = this.props;
     const classes = combineClasses(style.sliderCard, className, { selected });
     const elementStyle = { width };
     return (
-      <div style={elementStyle} className={classes}>
+      <div style={elementStyle} className={classes} {...otherProps}>
         {children}
       </div>
     );

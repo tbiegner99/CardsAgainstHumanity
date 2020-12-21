@@ -30,6 +30,10 @@ class StoreField {
     return this._name;
   }
 
+  get hasValue() {
+    return this.loadState === LoadingStates.DONE;
+  }
+
   get loadState() {
     return this._loadState;
   }

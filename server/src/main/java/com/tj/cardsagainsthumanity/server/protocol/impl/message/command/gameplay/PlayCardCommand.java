@@ -11,6 +11,6 @@ public class PlayCardCommand extends BaseCommand<CardPlayRequest> {
     }
 
     public PlayCardCommand(CardPlayRequest request) {
-        super(ProtocolCommandName.PLAY, request);
+        super(ProtocolCommandName.PLAY_CARD, request);
     }
 }

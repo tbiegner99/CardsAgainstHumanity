@@ -19,7 +19,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class CardResponseConverterTest {
     private final CardPackage.IconType iconType = CardPackage.IconType.SVG;
-    private final PackageResponse expectedPackage = new PackageResponse("testPackage", iconType, "testIcon");
+    private final Integer ownerId = 98;
+    private final PackageResponse expectedPackage = new PackageResponse(1, "testPackage", ownerId, iconType, "testIcon", null, null);
     private final CardPackage testPackage = new CardPackage("testPackage", "testIcon", iconType);
     private final WhiteCard card = new WhiteCard(testPackage, "text");
     private CardResponseConverter converter;

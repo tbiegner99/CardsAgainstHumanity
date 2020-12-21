@@ -29,12 +29,15 @@ public class CardServiceTest {
     @Mock
     private Card testCard2;
 
+    @Mock
+    private CardPackageService cardPackageService;
+
     private CardService service;
 
     @Before
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
-        service = new CardService(dao);
+        service = new CardService(cardPackageService, dao);
         when(dao.deleteCard(any(Card.class))).thenReturn(testCard1);
         when(dao.saveCard(any(Card.class))).thenReturn(testCard1);
     }
@@ -50,7 +53,7 @@ public class CardServiceTest {
 
     @Test
     public void createCard() {
-        Card result = service.createCard(testCard1);
+        Card result = service.createCard(1, testCard1);
         //it invokes dao
         verify(dao, times(1)).saveCard(testCard1);
         //it returns dao returned value
@@ -59,7 +62,7 @@ public class CardServiceTest {
 
     @Test
     public void createCards() {
-        Collection<Card> result = service.createCards(Arrays.asList(testCard1, testCard2));
+        Collection<Card> result = service.createCards(1, Arrays.asList(testCard1, testCard2));
         //it invokes dao for each card
         verify(dao, times(1)).saveCard(testCard1);
         verify(dao, times(1)).saveCard(testCard1);

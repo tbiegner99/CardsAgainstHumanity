@@ -1,6 +1,7 @@
 package com.tj.cardsagainsthumanity.models.gameplay;
 
 import com.tj.cardsagainsthumanity.models.AuditedEntity;
+import com.tj.cardsagainsthumanity.models.cards.DeckInfo;
 import com.tj.cardsagainsthumanity.models.cards.WhiteCard;
 import com.tj.cardsagainsthumanity.models.gameplay.game.PlayerHandCard;
 import com.tj.cardsagainsthumanity.models.gameplay.game.Scoreboard;
@@ -23,13 +24,16 @@ public class Game extends AuditedEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     private GameState state = GameState.INITIALIZING;
-    private String code;
     @OneToOne
+    @JoinColumn(name = "deck_id", referencedColumnName = "deck_id")
+    private DeckInfo deck;
+    private String code;
+    @OneToOne()
     @JoinColumn(name = "current_round_id", referencedColumnName = "game_round_id")
     private GameRound currentRound;
     @Transient
     private Map<Player, Set<WhiteCard>> playerHands;
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "game")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "game")
     private Set<PlayerHandCard> cardsInPlay;
 
     public Game() {
@@ -77,6 +81,14 @@ public class Game extends AuditedEntity {
         this.currentRound = currentRound;
     }
 
+    public DeckInfo getDeck() {
+        return deck;
+    }
+
+    public void setDeck(DeckInfo deck) {
+        this.deck = deck;
+    }
+
     private void setCardsInPlay() {
         Set<PlayerHandCard> ret = new HashSet<>();
 
@@ -96,7 +108,6 @@ public class Game extends AuditedEntity {
 
     public void setCardsInPlay(Set<PlayerHandCard> cards) {
         cardsInPlay = cards;
-        cards.stream().collect(Collectors.groupingBy(PlayerHandCard::getPlayer));
     }
 
     public Map<Player, Set<WhiteCard>> getPlayerHands() {
@@ -105,8 +116,19 @@ public class Game extends AuditedEntity {
 
     public void setPlayerHands(Map<Player, Set<WhiteCard>> playerHands) {
         this.playerHands = playerHands;
-        setCardsInPlay();
 
+    }
+
+    @PostLoad
+    private void initalizePlayersAfterLoad() {
+
+        Map<Player, Set<WhiteCard>> handCards = cardsInPlay.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                PlayerHandCard::getPlayer,
+                                Collectors.mapping(card -> card.getWhiteCard(), Collectors.toSet()
+                                )));
+        setPlayerHands(handCards);
     }
 
     public boolean hasPlayer(Player player) {

@@ -1,0 +1,50 @@
+.createCard {
+    display: flex; 
+    flex-direction: column;
+}
+
+.addForm {
+    height:100%;
+    display: flex;
+    flex-direction: column;
+}
+.typeSelect {
+    display:flex;
+    justify-content: center;
+}
+.formContent {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.bulkDisplay {
+    flex-grow:1;
+}
+.bulkForm {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom:30px;
+}
+.formContent > * {
+    padding: 10px;
+}
+
+.submitButtons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.formButton {
+    padding:5px;
+}
+
+
+.previewCards {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}

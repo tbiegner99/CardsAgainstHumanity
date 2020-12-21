@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Repository
 public class GameDao {
 
 
+    @PersistenceContext
     private EntityManager entityManager;
 
 
@@ -35,9 +37,10 @@ public class GameDao {
 
 
     public Game getGameByCode(String code) {
-        Query query = entityManager.createNativeQuery("Select * from game where code = :code", Game.class);
+        Query query = entityManager.createNativeQuery("Select game_id from game where code = :code");
         query.setParameter("code", code);
-        return (Game) query.getSingleResult();
+        Integer gameId = (Integer) query.getSingleResult();
+        return this.getGame(gameId);
     }
 
     public Game getGame(Integer gameId) {

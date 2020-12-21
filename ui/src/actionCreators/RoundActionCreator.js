@@ -3,8 +3,6 @@ import GameCommands from '../gameSocket/GameCommands';
 import WebsocketDatasource from '../datasource/WebsocketDatasource';
 import GameActions from '../actions/GameActions';
 import Commands from '../utils/Commands';
-import Urls from '../utils/Urls';
-import GameStates from '../utils/GameStates';
 
 class GameEventActionCreator extends BaseActionCreator {
   constructor(websocketDatasource) {
@@ -22,11 +20,50 @@ class GameEventActionCreator extends BaseActionCreator {
 
   onRoundStatusReceived() {}
 
-  makePlay() {}
+  async makePlay(roundId, cardsToPlay) {
+    const commandResponse = await this.websocketDatasource.sendCommand(GameCommands.PLAY_CARD, {
+      roundId,
+      cardsToPlay
+    });
 
-  declareWinner() {}
+    this.dispatch({
+      type: GameActions.GAME_STATUS,
+      data: commandResponse
+    });
+  }
 
-  endRound() {}
+  async revealPlay(roundId, cardsToPlay) {
+    const commandResponse = await this.websocketDatasource.sendCommand(GameCommands.REVEAL_PLAY, {
+      roundId,
+      cardsToPlay
+    });
+
+    this.dispatch({
+      type: GameActions.GAME_STATUS,
+      data: commandResponse
+    });
+  }
+
+  async declareWinner(play) {
+    const commandResponse = await this.websocketDatasource.sendCommand(
+      GameCommands.CHOOSE_WINNER,
+      play
+    );
+
+    this.dispatch({
+      type: GameActions.GAME_STATUS,
+      data: commandResponse
+    });
+  }
+
+  async endRound() {
+    const commandResponse = await this.websocketDatasource.sendCommand(GameCommands.END_ROUND);
+
+    this.dispatch({
+      type: GameActions.GAME_STATUS,
+      data: commandResponse
+    });
+  }
 
   nextRound() {}
 }

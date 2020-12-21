@@ -1,0 +1,19 @@
+.toggleButton {
+    border-radius: 0;
+}
+
+.toggleButton:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.toggleButton:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+.toggleButton:global(.selected ){
+    color:white;
+    background-color: black;
+}

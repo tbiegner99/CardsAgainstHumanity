@@ -2,6 +2,7 @@ package com.tj.cardsagainsthumanity.controllers;
 
 import com.tj.cardsagainsthumanity.serializer.requestModel.user.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,10 +46,21 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) throws ServletException {
-       HttpSession session = request.getSession(false);
-       if(session!=null) {
-           session.invalidate();
-       }
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/check")
+    public ResponseEntity<?> check(HttpServletRequest request) throws ServletException {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         return ResponseEntity.noContent()
                 .build();

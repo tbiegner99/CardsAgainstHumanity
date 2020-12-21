@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 public class PlayerResponseConverter implements ResponseConverter<Player, PlayerResponse> {
     @Override
     public PlayerResponse convertBusinessObjectToResponse(Player businessObject) {
+        if (businessObject == null) {
+            return null;
+        }
         return PlayerResponse.builder()
                 .id(businessObject.getId())
                 .displayName(businessObject.getDisplayName())

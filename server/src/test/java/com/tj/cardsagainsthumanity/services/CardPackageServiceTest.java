@@ -2,6 +2,7 @@ package com.tj.cardsagainsthumanity.services;
 
 import com.tj.cardsagainsthumanity.dao.CardDao;
 import com.tj.cardsagainsthumanity.dao.CardPackageDao;
+import com.tj.cardsagainsthumanity.dao.DeckDao;
 import com.tj.cardsagainsthumanity.models.cards.Card;
 import com.tj.cardsagainsthumanity.models.cards.CardPackage;
 import com.tj.cardsagainsthumanity.models.cards.PackageImport;
@@ -30,6 +31,8 @@ public class CardPackageServiceTest {
     @Mock
     private CardDao cardDao;
     @Mock
+    private DeckDao deckDao;
+    @Mock
     private CardPackage testPackage;
     @Mock
     private Card card1;
@@ -45,7 +48,7 @@ public class CardPackageServiceTest {
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
         cardsToImport = new HashSet<>(Arrays.asList(card1, card2));
-        service = new CardPackageService(dao, cardDao);
+        service = new CardPackageService(deckDao, dao, cardDao);
         when(dao.deleteCardPackage(any())).thenReturn(testPackage);
         when(dao.saveCardPackage(any())).thenReturn(testPackage);
         when(dao.getCardPackageById(6)).thenReturn(testPackage);

@@ -4,4 +4,6 @@ import com.tj.cardsagainsthumanity.core.game.GameDriver;
 
 public interface GameJoinedHandler {
     void onGameJoined(GameDriver game);
+
+    void onGameLeft(GameDriver game);
 }

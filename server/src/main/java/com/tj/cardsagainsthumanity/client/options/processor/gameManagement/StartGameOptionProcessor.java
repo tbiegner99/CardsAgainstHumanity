@@ -1,7 +1,6 @@
 package com.tj.cardsagainsthumanity.client.options.processor.gameManagement;
 
 import com.tj.cardsagainsthumanity.client.io.connection.ServerConnection;
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.OptionContext;
 import com.tj.cardsagainsthumanity.client.options.OptionProcessor;
 import com.tj.cardsagainsthumanity.client.options.processor.result.ProcessorResult;
@@ -16,7 +15,7 @@ public class StartGameOptionProcessor implements OptionProcessor<StartGameOption
     @Override
     public ProcessorResult processOption(StartGameOption option, OptionContext context) {
         ServerConnection connection = context.getConnection();
-        Integer gameId = context.getGameState().getCurrentGameId().get();
+        Integer gameId = context.getGameState().getGameId();
         GameRequest request = new GameRequest(gameId);
         StartGameCommand command = new StartGameCommand(request);
         connection.sendCommand(command);
@@ -24,9 +23,6 @@ public class StartGameOptionProcessor implements OptionProcessor<StartGameOption
         if (response.isErrorResponse()) {
             return ProcessorResult.failure();
         }
-        return ProcessorResult.success(
-                GameState.builder(context.getGameState())
-                        .build()
-        );
+        return ProcessorResult.success(context.getGameState());
     }
 }

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DatabaseImportRequestNormalizerTest {
@@ -42,7 +43,7 @@ public class DatabaseImportRequestNormalizerTest {
     private DatabaseImportRequest setUpRequest() throws IOException {
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-   
+
         File testDataFile = new File(this.getClass().getClassLoader().getResource("testDatabaseImport.json").getFile());
         return mapper.readValue(testDataFile, DatabaseImportRequest.class);
     }
@@ -58,19 +59,21 @@ public class DatabaseImportRequestNormalizerTest {
     }
 
     private void chekFirstPackage(NormalizedPackageImport next) {
-        CreatePackageRequest info = new CreatePackageRequest("Test Package 1", null, CardPackage.IconType.FONTAWESOME);
+        CreatePackageRequest info = new CreatePackageRequest("Test Package 1", null, true, CardPackage.IconType.FONTAWESOME);
         assertEquals(info, next.getPackageInfo());
 
         assertContainsAllWhite(next, "card0", "card1");
         assertContainsAllBlack(next, "blackCard0", "blackCard1");
+        assertTrue(info.isOfficial());
     }
 
     private void checkSecondPackage(NormalizedPackageImport next) {
-        CreatePackageRequest info = new CreatePackageRequest("Test Package 2", "paw", CardPackage.IconType.FONTAWESOME);
+        CreatePackageRequest info = new CreatePackageRequest("Test Package 2", "paw", false, CardPackage.IconType.FONTAWESOME);
         assertEquals(info, next.getPackageInfo());
 
         assertContainsAllWhite(next, "card2", "card3", "card4");
         assertContainsAllBlack(next, "blackCard2", "blackCard3", "blackCard4");
+        assertFalse(info.isOfficial());
     }
 
     private void assertContainsAllBlack(NormalizedPackageImport next, String... cards) {

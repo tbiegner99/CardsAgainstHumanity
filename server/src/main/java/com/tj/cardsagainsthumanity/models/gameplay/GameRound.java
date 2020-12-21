@@ -14,21 +14,22 @@ public class GameRound extends AuditedEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "game_round_id")
     private Integer id;
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "black_card_id")
     private BlackCard blackCard;
     @ManyToOne
     @JoinColumn(name = "game_id")
     private Game game;
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "czar", referencedColumnName = "user_id")
     private Player czar;
     @Column(name = "czar", insertable = false, updatable = false)
     private Integer czarId;
 
-    @OneToMany(mappedBy = "round", cascade = CascadeType.MERGE)
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "round", cascade = CascadeType.MERGE)
     private Set<CardPlay> plays;
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "winning_play_id")
     private CardPlay winner;
 
@@ -85,6 +86,13 @@ public class GameRound extends AuditedEntity {
         this.winner = winner;
     }
 
+    public void revealNext() {
+        plays.stream()
+                .filter(play -> !play.isRevealed())
+                .findFirst()
+                .ifPresent(play -> play.setRevealed(true));
+    }
+
     public Integer getCzarId() {
         return czarId;
     }
@@ -129,7 +137,7 @@ public class GameRound extends AuditedEntity {
 
     public CardPlay getPlayById(Integer playId) throws NoSuchElementException {
         return getPlays().stream()
-                .filter(play -> play.getId() == playId)
+                .filter(play -> play.getId().equals(playId))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("No card play with id: " + playId));
     }

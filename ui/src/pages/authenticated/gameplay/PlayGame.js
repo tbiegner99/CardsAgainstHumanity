@@ -1,29 +1,31 @@
 import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import RoundPlay from './roundPlay/ReduxRoundPlay';
+import Urls from '../../../utils/Urls';
+import Scoreboard from './scoreboard/Scoreboard';
 import GameOptionsBar from '../../../components/GameOptionsBar';
-import PlayCardPage from './player/playCard/PlayCardPage';
-import CzarPage from './czar/CzarPage';
+import CzarOrder from './czarOrder/CzarOrder';
 import styles from './main.css';
+import MyHand from './myHand/MyHand';
 
-const renderPlayerPage = (props) => {
-  const { blackCard, handCards } = props;
-  return <PlayCardPage blackCard={blackCard} handCards={handCards} />;
+const MainGame = (props) => {
+  const passPropsTo = (Component) => (passedProps) => <Component {...props} {...passedProps} />;
+  return (
+    <main className={styles.mainPage}>
+      <div className={styles.mainContent}>
+        <Switch>
+          <Route path={Urls.SCOREBOARD} render={passPropsTo(Scoreboard)} />
+          <Route path={Urls.MY_HAND} render={passPropsTo(MyHand)} />
+          <Route path={Urls.CZAR_ORDER} render={passPropsTo(CzarOrder)} />
+          <Route path={Urls.PLAY_GAME} render={passPropsTo(RoundPlay)} />
+          <Route path="*">
+            <Redirect to={Urls.HOME} />
+          </Route>
+        </Switch>
+      </div>
+      <GameOptionsBar {...props} />
+    </main>
+  );
 };
 
-const renderCzarPage = (props) => <CzarPage />;
-
-const renderGameContent = (props) => {
-  const { isCzar } = props;
-  if (isCzar) {
-    return renderCzarPage(props);
-  }
-  return renderPlayerPage(props);
-};
-
-const PlayGame = (props) => (
-  <main className={styles.mainPage}>
-    <div className={styles.mainContent}>{renderGameContent(props)}</div>
-    <GameOptionsBar isCzar={props.isCzar} />
-  </main>
-);
-
-export default PlayGame;
+export default MainGame;

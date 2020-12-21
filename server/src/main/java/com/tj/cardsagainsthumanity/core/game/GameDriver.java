@@ -41,6 +41,12 @@ public interface GameDriver extends GameEventRegistry {
 
     List<Player> getPlayers();
 
+    List<Player> getCzarOrder();
+
+    boolean isPlayerInGame(Player player);
+
+    Integer getCzarPositionFor(Integer playerId);
+
     void onRoundOver(RoundDriver round);
 
     Integer getGameId();

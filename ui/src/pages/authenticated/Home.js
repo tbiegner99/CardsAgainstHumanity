@@ -14,12 +14,16 @@ const AuthenticatedHome = (props) => {
       <h2 className={styles.title}>Choose Option</h2>
       <section className={styles.buttonsPanel}>
         <div>
-          <IconButton onClick={triggerUrlChange(Urls.NEW_GAME)} title="New Game">
+          <IconButton data-id="new-game" onClick={triggerUrlChange(Urls.NEW_GAME)} title="New Game">
             {Icons.NewGame}
           </IconButton>
         </div>
         <div>
-          <IconButton onClick={triggerUrlChange(Urls.JOIN_GAME)} title="Join Game">
+          <IconButton
+            data-id="join-menu-option"
+            onClick={triggerUrlChange(Urls.JOIN_GAME)}
+            title="Join Game"
+          >
             {Icons.JoinGame}
           </IconButton>
         </div>

@@ -28,6 +28,13 @@ public class RoundDriverFactory {
         this.roundDao = roundDao;
     }
 
+    public RoundDriver createGameRound(GameDriver gameDriver, GameRound round, GameEventDispatcher eventDispatcher, EventFactory eventFactory) {
+        if (round == null) {
+            return null;
+        }
+        return new NormalGameRoundDriver(gameDriver, eventDispatcher, eventFactory, round, roundDao);
+    }
+
     public RoundDriver createGameRound(GameDriver gameDriver, GameEventDispatcher eventDispatcher, EventFactory eventFactory, RoundType type, CzarGenerator czarGenerator) {
         Player czar = czarGenerator.next();
         Game game = gameDriver.getGame();

@@ -1,0 +1,58 @@
+.filter {
+    height:40px;
+}
+.header {
+    display:flex;
+    justify-content: center;
+    width:100%;
+}
+.page {
+   max-width: 580px;
+   margin:0 auto;
+   display:flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.packageActions {
+    padding:20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.packagesDisplay {
+    flex-grow: 1;
+    width:100%;
+    border:1px solid black;
+
+}
+
+.addForm {
+    height:100%;
+    display: flex;
+    flex-direction: column;
+}
+.formContent {
+    flex-grow: 1;
+}
+
+.submitButtons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.formButton {
+    padding:5px;
+}
+
+.iconElement {
+    width:100%;
+    padding-top:30px;
+}
+
+.iconUpload {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

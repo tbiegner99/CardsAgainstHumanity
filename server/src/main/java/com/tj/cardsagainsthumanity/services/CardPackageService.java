@@ -2,14 +2,15 @@ package com.tj.cardsagainsthumanity.services;
 
 import com.tj.cardsagainsthumanity.dao.CardDao;
 import com.tj.cardsagainsthumanity.dao.CardPackageDao;
-import com.tj.cardsagainsthumanity.models.cards.Card;
-import com.tj.cardsagainsthumanity.models.cards.CardPackage;
-import com.tj.cardsagainsthumanity.models.cards.PackageImport;
+import com.tj.cardsagainsthumanity.dao.DeckDao;
+import com.tj.cardsagainsthumanity.models.cards.*;
+import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class CardPackageService {
     private CardPackageDao cardPackageDao;
     private CardDao cardDao;
+    private DeckDao deckDao;
 
     @Autowired
-    public CardPackageService(CardPackageDao cardPackageDao, CardDao cardDao) {
+    public CardPackageService(DeckDao deckDao, CardPackageDao cardPackageDao, CardDao cardDao) {
+        this.deckDao = deckDao;
         this.cardPackageDao = cardPackageDao;
         this.cardDao = cardDao;
     }
@@ -37,6 +40,15 @@ public class CardPackageService {
         return cardPackageDao.getCardPackageById(packageId);
     }
 
+    public List<CardPackage> getPackagesForPlayer(Player player) {
+        return cardPackageDao.getPackagesForPlayer(player.getId());
+    }
+
+    public List<CardPackage> getUsablePackagesForPlayer(Player player) {
+        return cardPackageDao.getUsablePackagesForPlayer(player.getId());
+    }
+
+
     public Collection<CardPackage> importPackages(Collection<PackageImport> packagesToImport) {
         return packagesToImport.stream()
                 .map(this::importPackage)
@@ -45,15 +57,35 @@ public class CardPackageService {
 
     private CardPackage importPackage(PackageImport packageImport) {
         CardPackage pack = cardPackageDao.saveOrGetExisting(packageImport.getCardPackage());
-        packageImport.getCardsToImport().forEach(card -> createCardInPackage(card, pack));
+        packageImport.getUniqueCards().forEach(card -> createCardInPackage(card, pack));
 
         return pack;
 
     }
 
 
-    private void createCardInPackage(Card card, CardPackage pack) {
-        card.setPackage(pack);
-        cardDao.saveCard(card);
+    public Card createCardInPackage(Card card, CardPackage pack) {
+        card.setCardPackage(pack);
+        return cardDao.saveCard(card);
+
+    }
+
+    public void updateCardCountForPackage(Integer cardPackageId) {
+        cardPackageDao.updateCardCountForPackage(cardPackageId);
+        deckDao.updateCardCountForDecksThatUsePackage(cardPackageId);
+    }
+
+
+    public DetailedCardPackage getPackageCardsForPackage(Integer packageId) {
+        CardPackage packageInfo = this.getCardPackageById(packageId);
+        List<WhiteCard> whiteCards = cardDao.getWhiteCardsForPackage(packageId);
+        List<BlackCard> blackCards = cardDao.getBlackCardsForPackage(packageId);
+        return new DetailedCardPackage(packageInfo, whiteCards, blackCards);
+    }
+
+    public void assertCanReadPackage(Player owner, Integer packageId) {
+    }
+
+    public void assertCanEditPackage(Player owner, Integer packageId) {
     }
 }

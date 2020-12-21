@@ -41,7 +41,7 @@ public class CreatePackageSerializerTest {
     @Test
     public void convertBusinessObjectToResponse() {
         CardPackage pack = new CardPackage(packageName, packageIcon, iconType);
-        PackageResponse expected = new PackageResponse(packageName, iconType, packageIcon);
+        PackageResponse expected = new PackageResponse(1, packageName, 8, iconType, packageIcon, null, null);
         PackageResponse result = converter.convertBusinessObjectToResponse(pack);
         assertEquals(expected, result);
     }

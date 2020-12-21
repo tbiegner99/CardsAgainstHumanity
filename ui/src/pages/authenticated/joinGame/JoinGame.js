@@ -15,7 +15,9 @@ const renderCode = (props) => {
   }
   return (
     <div>
-      <h3>Joined Game: {gameId}</h3>
+      <h3>
+        Joined Game: <span data-id="game-id">{gameId}</span>
+      </h3>
       <h2>Waiting for game to start</h2>
       <PlayerDisplay players={players} className={styles.playerDisplay} />
     </div>
@@ -24,11 +26,13 @@ const renderCode = (props) => {
 
 const renderCreatedGame = (props) => (
   <Form onSubmit={props.onJoinGame}>
-    <TextInput name="code" data-rule-required />
+    <TextInput data-id="game-code-input" name="code" data-rule-required />
     <div>
       <ErrorLabel for="code" />
     </div>
-    <PrimaryButton submittable>Join Game</PrimaryButton>
+    <PrimaryButton data-id="join-game" submittable>
+      Join Game
+    </PrimaryButton>
   </Form>
 );
 

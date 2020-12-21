@@ -3,10 +3,7 @@ package com.tj.cardsagainsthumanity.models.gameplay.game;
 import com.tj.cardsagainsthumanity.models.gameplay.Game;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +13,7 @@ import java.util.stream.Collectors;
 public class Scoreboard {
 
     @MapKey(name = "playerId")
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true, mappedBy = "game")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, mappedBy = "game")
     private Map<Integer, PlayerScore> scores;
 
     public Scoreboard() {
@@ -27,6 +24,7 @@ public class Scoreboard {
     public Map<Integer, PlayerScore> getScores() {
         return this.scores;
     }
+
 
     public void setScores(Set<PlayerScore> scores) {
         Map<Integer, PlayerScore> scoresMap = scores.stream().collect(Collectors.toMap(

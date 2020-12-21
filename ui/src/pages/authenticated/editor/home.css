@@ -1,0 +1,25 @@
+.buttonsPanel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+.title {
+    width:100%;
+    text-align: center;
+}
+
+
+
+    .buttonsPanel > div {
+        padding:20px;
+    }
+    @media (max-width: 600px) {
+        .buttonsPanel {
+            flex-direction: column;
+        }
+        .buttonsPanel > div {
+            padding:20px 0;
+            width:100%;
+        }
+    }

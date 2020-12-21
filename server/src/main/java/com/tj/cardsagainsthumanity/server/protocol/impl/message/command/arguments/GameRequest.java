@@ -5,6 +5,8 @@ import java.util.Objects;
 public class GameRequest {
     private Integer gameId;
 
+    private String gameCode;
+
     public GameRequest(Integer gameId) {
         setGameId(gameId);
     }
@@ -20,10 +22,18 @@ public class GameRequest {
         this.gameId = gameId;
     }
 
+    public String getGameCode() {
+        return gameCode;
+    }
+
+    public void setGameCode(String gameCode) {
+        this.gameCode = gameCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         GameRequest that = (GameRequest) o;
         return Objects.equals(getGameId(), that.getGameId());
     }
-    
+
 }

@@ -5,11 +5,11 @@ import com.tj.cardsagainsthumanity.core.game.events.handler.*;
 import com.tj.cardsagainsthumanity.core.game.events.types.GameEvent;
 import com.tj.cardsagainsthumanity.core.game.events.types.PlayerEvent;
 import com.tj.cardsagainsthumanity.core.game.events.types.RoundEvent;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.GameStatusCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.ExtendedGameStatus;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.GameStatus;
 import com.tj.cardsagainsthumanity.server.protocol.message.Command;
 import com.tj.cardsagainsthumanity.server.protocol.message.Response;
 import com.tj.cardsagainsthumanity.server.socket.ConnectionContext;
@@ -19,10 +19,12 @@ import java.io.IOException;
 public abstract class AbstractConnection implements RoundStateChangeEventHandler, PlayerStateChangeHandler, RoundStartedEventHandler, GameJoinedHandler, GameStartedEventHandler, GameStateChangeEventHandler {
     private final CommandProcessor<Command, Response> commandProcessor;
     private final ConnectionContext connectionContext;
+    private final GameStatusFactory statusFactory;
 
-    public AbstractConnection(CommandProcessor<Command, Response> commandProcessor) {
+    public AbstractConnection(CommandProcessor<Command, Response> commandProcessor, GameStatusFactory gameStatusFactory) {
         this.commandProcessor = commandProcessor;
         this.connectionContext = new ConnectionContext(this);
+        this.statusFactory = gameStatusFactory;
     }
 
     public CommandProcessor<Command, Response> getCommandProcessor() {
@@ -43,13 +45,22 @@ public abstract class AbstractConnection implements RoundStateChangeEventHandler
     }
 
     @Override
+    public void onGameLeft(GameDriver game) {
+        game.unregisterGameStartedHandler(this);
+        game.unregisterRoundStateChangeHandler(this);
+        game.unregisterRoundStartedHandler(this);
+        game.unregisterPlayerStateChangeEvent(this);
+        game.unregisterGameStateChangeHandler(this);
+    }
+
+    @Override
     public void onGameStateChange(GameEvent game) {
         sendGameStatus(game.getGame());
     }
 
     @Override
     public void onPlayerStateChange(PlayerEvent event) {
-        sendExtendedGameStatus(event.getGame());
+        sendGameStatus(event.getGame());
     }
 
     @Override
@@ -67,30 +78,20 @@ public abstract class AbstractConnection implements RoundStateChangeEventHandler
         sendGameStatus(evt.getGame());
     }
 
-    protected Player getCurrentPlayer(GameDriver driver) {
-        return getConnectionContext().getPlayer().orElseThrow(() -> new IllegalStateException("Game status cannot be retrieved without current player"));
-    }
-
-    protected GameStatusCommand createExtendedGameStatusCommand(GameDriver game) {
-        Player currentPlayer = getCurrentPlayer(game);
-        GameStatus request = ExtendedGameStatus.fromGame(game, currentPlayer);
-        return new GameStatusCommand(request);
-    }
 
     protected GameStatusCommand createGameStatusCommand(GameDriver game) {
-        Player currentPlayer = getCurrentPlayer(game);
-        GameStatus request = GameStatus.fromGame(game, currentPlayer);
+        Player currentPlayer = getCurrentPlayer();
+        GameStatus request = statusFactory.buildGameStatus(currentPlayer, game);
         return new GameStatusCommand(request);
+    }
+
+    protected Player getCurrentPlayer() {
+        return getConnectionContext().getPlayer().orElseThrow(() -> new IllegalStateException("Game status cannot be retrieved without current player"));
     }
 
     protected void sendGameStatus(GameDriver game) {
         this.sendCommand(createGameStatusCommand(game));
     }
-
-    protected void sendExtendedGameStatus(GameDriver game) {
-        this.sendCommand(createExtendedGameStatusCommand(game));
-    }
-
 
     public abstract boolean isConnectionAlive();
 

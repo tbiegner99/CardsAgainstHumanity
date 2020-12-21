@@ -26,6 +26,7 @@ public class BaseResponse<T> implements Response<T> {
         setBody(body);
     }
 
+
     @Override
     public int getStatus() {
         return status;

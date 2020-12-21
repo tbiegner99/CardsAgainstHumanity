@@ -28,11 +28,20 @@ class CommandSerializer {
     };
   }
 
-  serializeCreateGameCommand() {
+  serializeEmptyCommand(commandName) {
+    return {
+      messageId: this.generateCommandId(),
+      commandName,
+      arguments: {}
+    };
+  }
+
+  serializeCreateGameCommand(data) {
+    const { deckId } = data;
     return {
       messageId: this.generateCommandId(),
       commandName: GameCommands.CREATE_GAME,
-      arguments: {}
+      arguments: { deckId }
     };
   }
 
@@ -45,14 +54,55 @@ class CommandSerializer {
     };
   }
 
+  serializeLoadGameCommand(data) {
+    const { gameId } = data;
+    return {
+      messageId: this.generateCommandId(),
+      commandName: GameCommands.LOAD_GAME,
+      arguments: { gameId }
+    };
+  }
+
+  serializeRevealCommand() {
+    return this.serializeEmptyCommand(GameCommands.REVEAL_PLAY);
+  }
+
+  serializePlayCardCommand(data) {
+    const { cardsToPlay, roundId } = data;
+    return {
+      messageId: this.generateCommandId(),
+      commandName: GameCommands.PLAY_CARD,
+      arguments: { roundId, cardsToPlay }
+    };
+  }
+
+  serializeChooseWinnerCommand(data) {
+    const { cards, id } = data;
+    return {
+      messageId: this.generateCommandId(),
+      commandName: GameCommands.CHOOSE_WINNER,
+      arguments: { id, cards }
+    };
+  }
+
   serializeCommands(commandName, data) {
     switch (commandName) {
       case GameCommands.CREATE_GAME:
-        return this.serializeCreateGameCommand();
+        return this.serializeCreateGameCommand(data);
       case GameCommands.JOIN_GAME:
         return this.serializeJoinGameCommand(data);
       case GameCommands.GAME_STARTED:
         return this.serializeGameStartedCommand(data);
+      case GameCommands.LOAD_GAME:
+        return this.serializeLoadGameCommand(data);
+      case GameCommands.PLAY_CARD:
+        return this.serializePlayCardCommand(data);
+      case GameCommands.REVEAL_PLAY:
+        return this.serializeRevealCommand(data);
+      case GameCommands.CHOOSE_WINNER:
+        return this.serializeChooseWinnerCommand(data);
+      case GameCommands.END_ROUND:
+        return this.serializeEmptyCommand(GameCommands.END_ROUND);
       default:
         throw new Error(`Unknown command name:${commandName}`);
     }
@@ -65,13 +115,100 @@ class CommandSerializer {
     };
   }
 
-  deserializeGameResponse(responseData) {
-    const { code, players } = responseData.body;
-    const statusData = this.deserializeGameStatus(responseData);
-    return Object.assign({}, statusData, {
+  deserializeRoundStatus(round) {
+    if (!round) return null;
+    const {
+      allCardsIn,
+      blackCard,
+      czar,
+      czarIsYou,
+      id,
+      judgementHasStarted,
+      numberOfPlays,
+      revealedPlays,
+      roundOver,
+      waitingForPlays,
+      winner,
+      canPlayCard,
+      myPlay
+    } = round;
+    return {
+      id,
+      allCardsIn,
+      blackCard: this.deserializeBlackCard(blackCard),
+      czar: this.deserializePlayer(czar),
+      czarIsYou,
+      judgementHasStarted,
+      numberOfPlays,
+      revealedPlays,
+      roundOver,
+      waitingForPlays,
+      winner,
+      canPlayCard,
+      myPlay
+    };
+  }
+
+  deserializePlayer(player) {
+    return {
+      playerId: player.playerId,
+      czarIndex: player.czarIndex,
+      displayName: player.displayName,
+      name: player.name,
+      currentCzar: player.currentCzar,
+      score: player.score
+    };
+  }
+
+  deserializeWhiteCard(card) {
+    return {
+      text: card.text,
+      id: card.id
+    };
+  }
+
+  deserializeBlackCard(card) {
+    return {
+      text: card.text,
+      id: card.id,
+      numberOfAnswers: card.numberOfAnswers
+    };
+  }
+
+  deserializeDeck(deck) {
+    return {
+      id: deck.id,
+      name: deck.name
+    };
+  }
+
+  deserializeHandCards(handCards) {
+    if (!handCards) {
+      return null;
+    }
+    return handCards.map(this.deserializeWhiteCard);
+  }
+
+  deserializeGameData(gameData) {
+    const { gameId, state, deck, round, players, code, handCards } = gameData;
+    return {
+      gameId,
       code,
-      players
-    });
+      gameState: state,
+      deck: this.deserializeDeck(deck),
+      currentHand: this.deserializeHandCards(handCards),
+      currentRound: this.deserializeRoundStatus(round),
+      players: players.map(this.deserializePlayer)
+    };
+  }
+
+  deserializeGameResponse(responseData) {
+    const { commandName, messageId, body: gameStatus } = responseData;
+    return {
+      commandName,
+      messageId,
+      ...this.deserializeGameData(gameStatus)
+    };
   }
 
   serializeCommandResponse(command, responseData) {
@@ -100,27 +237,19 @@ class CommandSerializer {
     };
   }
 
-  deserializeGameStatus(commandData) {
-    const {
-      commandName,
-      messageId,
-      arguments: { gameId, state, round, currentHand, players }
-    } = commandData;
+  deserializeGameStatusCommand(commandData) {
+    const { commandName, messageId, arguments: gameStatus } = commandData;
     return {
       commandName,
       messageId,
-      gameId,
-      gameState: state,
-      currentHand,
-      currentRound: round,
-      players
+      ...this.deserializeGameData(gameStatus)
     };
   }
 
   deserializeCommand(commandName, commandData) {
     switch (commandName) {
       case GameCommands.GAME_STATUS:
-        return this.deserializeGameStatus(commandData);
+        return this.deserializeGameStatusCommand(commandData);
       default:
         throw new Error(`Unknown command name: ${commandName}`);
     }
@@ -131,8 +260,13 @@ class CommandSerializer {
     switch (commandName) {
       case GameCommands.GAME_STARTED:
         return {};
+      case GameCommands.END_ROUND:
+      case GameCommands.CHOOSE_WINNER:
+      case GameCommands.REVEAL_PLAY:
+      case GameCommands.LOAD_GAME:
       case GameCommands.JOIN_GAME:
       case GameCommands.CREATE_GAME:
+      case GameCommands.PLAY_CARD:
         return this.deserializeGameResponse(data.response);
       default:
         throw new Error(`Unknown command name: ${commandName}`);

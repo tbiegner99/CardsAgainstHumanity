@@ -27,7 +27,7 @@ public class CardPlay extends AuditedEntity {
             inverseJoinColumns = @JoinColumn(name = "white_card_id")
     )
     private List<WhiteCard> cards;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private Player player;
     @Column(name = "winner")

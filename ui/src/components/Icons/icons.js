@@ -8,18 +8,35 @@ const createIconComponent = (cssClass, ...otherClasses) => (props) => {
   return <i className={combinedClasses} {...otherProps} />;
 };
 
-const IconComponents = {
-  User: createIconComponent(fa['fa-user']),
-  Hamburger: createIconComponent(fa['fa-bars']),
-  CardHand: createIconComponent(fa['fa-clone']),
-  Scoreboard: createIconComponent(fa['fa-list-ol']),
-  DeckDesign: createIconComponent(fa['fa-edit']),
-  NewGame: createIconComponent(fa['fa-gamepad']),
-  JoinGame: createIconComponent(fa['fa-user-plus']),
-  Stats: createIconComponent(fa['fa-trophy'])
+export const UserIcon = createIconComponent(fa['fa-user']);
+export const UpArrow = createIconComponent(fa['fa-caret-up']);
+export const DownArrow = createIconComponent(fa['fa-caret-down']);
+export const HamburgerIcon = createIconComponent(fa['fa-bars']);
+export const CardHandIcon = createIconComponent(fa['fa-clone']);
+export const ScoreboardIcon = createIconComponent(fa['fa-list-ol']);
+export const DeckDesignIcon = createIconComponent(fa['fa-edit']);
+export const NewGameIcon = createIconComponent(fa['fa-gamepad']);
+export const JoinGameIcon = createIconComponent(fa['fa-user-plus']);
+export const StatsIcon = createIconComponent(fa['fa-trophy']);
+export const AddIcon = createIconComponent(fa['fa-plus']);
+export const EditIcon = createIconComponent(fa['fa-edit']);
+export const DeleteIcon = createIconComponent(fa['fa-trash']);
+export const CardIcon = createIconComponent(fa['fa-square']);
+export const DeckIcon = createIconComponent(fa['fa-bars']);
+export const UploadIcon = createIconComponent(fa['fa-upload']);
+export const IconComponents = {
+  User: UserIcon,
+  Hamburger: HamburgerIcon,
+  CardHand: CardHandIcon,
+  Scoreboard: ScoreboardIcon,
+  DeckDesign: DeckDesignIcon,
+  NewGame: NewGameIcon,
+  JoinGame: JoinGameIcon,
+  Stats: StatsIcon,
+  Add: AddIcon,
+  Deck: DeckIcon,
+  Card: CardIcon
 };
-
-export { IconComponents };
 
 export default {
   User: <IconComponents.User />,

@@ -4,7 +4,6 @@ import CommandSerializer from './serializers/CommandSerializer';
 class WebsocketDatasource {
   async ensureConnected() {
     await GameSocketManager.ensureConnected();
-    this.setupCommandHandlers();
   }
 
   addCommandHandler(commandName, handler) {
@@ -20,6 +19,7 @@ class WebsocketDatasource {
   }
 
   async sendCommand(commandName, data) {
+    await this.ensureConnected();
     const commandResponse = await GameSocketManager.getGameSocket().sendCommand(commandName, data);
     return CommandSerializer.deserializeResponse(commandName, commandResponse);
   }

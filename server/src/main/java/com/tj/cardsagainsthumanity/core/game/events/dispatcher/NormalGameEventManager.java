@@ -70,51 +70,118 @@ public class NormalGameEventManager implements GameEventManager {
     }
 
     @Override
+    public void unregisterGameStartedHandler(GameStartedEventHandler handler) {
+        gameStartedEventHandlerList.remove(handler);
+    }
+
+    @Override
+    public void unregisterGameOverHandler(GameOverEventHandler handler) {
+        gameOverEventHandlerList.remove(handler);
+    }
+
+    @Override
+    public void unregisterGameStateChangeHandler(GameStateChangeEventHandler handler) {
+        gameStateChangeEventHandlerList.remove(handler);
+    }
+
+    @Override
+    public void unregisterRoundStartedHandler(RoundStartedEventHandler handler) {
+        roundStartedEventHandlerList.remove(handler);
+    }
+
+    @Override
+    public void unregisterRoundOverHandler(RoundOverEventHandler handler) {
+        roundOverEventHandlerList.remove(handler);
+    }
+
+    @Override
+    public void unregisterRoundStateChangeHandler(RoundStateChangeEventHandler handler) {
+        roundStateChangeEventHandlerList.remove(handler);
+    }
+
+    @Override
+    public void unregisterPlayerStateChangeEvent(PlayerStateChangeHandler handler) {
+        playerStateChangeHandlerList.remove(handler);
+    }
+
+    private void logException(Exception e) {
+    }
+
+    @Override
     public void dispatchGameStartedEvent(GameEvent evt) {
         for (GameStartedEventHandler handler : gameStartedEventHandlerList) {
-            handler.onGameStarted(evt);
+            try {
+                handler.onGameStarted(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
+
 
     @Override
     public void dispatchGameOverEvent(GameEvent evt) {
         for (GameOverEventHandler handler : gameOverEventHandlerList) {
-            handler.onGameOver(evt);
+            try {
+                handler.onGameOver(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
 
     @Override
     public void dispatchGameChangeEvent(GameEvent evt) {
         for (GameStateChangeEventHandler handler : gameStateChangeEventHandlerList) {
-            handler.onGameStateChange(evt);
+            try {
+                handler.onGameStateChange(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
 
     @Override
     public void dispatchRoundStartedEvent(RoundEvent evt) {
         for (RoundStartedEventHandler handler : roundStartedEventHandlerList) {
-            handler.onRoundStart(evt);
+            try {
+                handler.onRoundStart(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
 
     @Override
     public void dispatchRoundOverEvent(RoundEvent evt) {
         for (RoundOverEventHandler handler : roundOverEventHandlerList) {
-            handler.onRoundOver(evt);
+            try {
+                handler.onRoundOver(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
 
     @Override
     public void dispatchRoundChangeEvent(RoundEvent evt) {
         for (RoundStateChangeEventHandler handler : roundStateChangeEventHandlerList) {
-            handler.onRoundChangeEvent(evt);
+            try {
+                handler.onRoundChangeEvent(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
 
     @Override
     public void dispatchPlayerChangeEvent(PlayerEvent evt) {
         for (PlayerStateChangeHandler handler : playerStateChangeHandlerList) {
-            handler.onPlayerStateChange(evt);
+            try {
+                handler.onPlayerStateChange(evt);
+            } catch (Exception e) {
+                logException(e);
+            }
         }
     }
 

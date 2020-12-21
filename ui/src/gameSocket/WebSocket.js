@@ -17,18 +17,32 @@ class WebSocketManager {
     if (this.isClosed) {
       throw new Error('Connection has been closed');
     }
-    return new Promise((resolve, reject) => {
+    if (this.isConnected) {
+      return Promise.resolve();
+    }
+    if (this.connecting) {
+      return this.connectPromise;
+    }
+    this.connecting = true;
+    this.connectPromise = new Promise((resolve, reject) => {
       this.socket = new WebSocket(this.url);
       this.socket.onopen = () => {
+        this.connecting = false;
+        this.connectPromise = null;
         this.connected = true;
         resolve();
       };
       this.socket.onmessage = (evt) => {
         this.handleWebsocketDataReceived(evt.data);
       };
-      this.socket.onerror = reject;
+      this.socket.onerror = (...args) => {
+        this.connecting = false;
+        this.connectPromise = null;
+        reject(...args);
+      };
       this.socket.onClose = this.onConnectionLost;
     });
+    return this.connectPromise;
   }
 
   get isClosed() {

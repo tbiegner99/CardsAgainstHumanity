@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "white_card")
 public class WhiteCard extends CommonCard {
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, optional = false)
     @PrimaryKeyJoinColumn
     private WhiteCardStats stats;
 
@@ -18,12 +18,12 @@ public class WhiteCard extends CommonCard {
         stats.setCard(this);
     }
 
+
     public WhiteCard(CardPackage cardPackage, String cardText) {
         super(cardPackage, cardText);
-        stats = new WhiteCardStats();
+        setStats(new WhiteCardStats());
         stats.setCard(this);
     }
-
 
     @Override
     public CardStats getPlayStats() {

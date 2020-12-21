@@ -7,9 +7,11 @@ public interface Card {
 
     String getText();
 
-    CardPackage getPackage();
+    void setText(String text);
 
-    void setPackage(CardPackage pack);
+    CardPackage getCardPackage();
+
+    void setCardPackage(CardPackage pack);
 
     CardStats getPlayStats();
 

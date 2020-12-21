@@ -3,6 +3,7 @@ package com.tj.cardsagainsthumanity.controllers;
 import com.tj.cardsagainsthumanity.models.cards.CardPackage;
 import com.tj.cardsagainsthumanity.models.cards.PackageImport;
 import com.tj.cardsagainsthumanity.serializer.converter.cardPackage.CreatePackageSerializer;
+import com.tj.cardsagainsthumanity.serializer.converter.cardPackage.DetailedPackageResponseConverter;
 import com.tj.cardsagainsthumanity.serializer.converter.packageImport.DatabaseImportRequestNormalizer;
 import com.tj.cardsagainsthumanity.serializer.converter.packageImport.PackageImportSerializer;
 import com.tj.cardsagainsthumanity.serializer.requestModel.cardPackage.CreatePackageRequest;
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,13 +52,17 @@ public class PackageControllerTest {
     private PackageImportSerializer importSerializer;
     @Mock
     private DatabaseImportRequest importRequest;
+    @Mock
+    private Authentication auth;
+    @Mock
+    private DetailedPackageResponseConverter detailedPackageResponseConverter;
 
     private PackageController controller;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        controller = new PackageController(packageService, converter, normalizer, importSerializer);
+        controller = new PackageController(packageService, converter, normalizer, importSerializer, detailedPackageResponseConverter);
         when(converter.convertRequestToBusinessObject(fakeRequest)).thenReturn(expectedPackage);
         when(packageService.createCardPackage(expectedPackage)).thenReturn(expectedPackage);
         when(converter.convertBusinessObjectToResponse(expectedPackage)).thenReturn(mockResponse);
@@ -67,7 +73,7 @@ public class PackageControllerTest {
 
     @Test
     public void createPackage() {
-        ResponseEntity<PackageResponse> result = controller.createPackage(fakeRequest);
+        ResponseEntity<PackageResponse> result = controller.createPackage(auth, fakeRequest);
         //it converts serializer to business object
         verify(converter, times(1)).convertRequestToBusinessObject(fakeRequest);
         //it calls the service

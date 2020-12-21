@@ -2,7 +2,10 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs } from '@storybook/addon-knobs';
-import PlayerBoard, { SortDirection, DataFields } from '../../../src/pages/playerBoard/PlayerBoard';
+import PlayerBoard, {
+  SortDirection,
+  DataFields
+} from '../../../src/components/playerBoard/PlayerBoard';
 
 const playerData = [
   {

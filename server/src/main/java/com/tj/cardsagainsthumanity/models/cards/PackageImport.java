@@ -1,7 +1,6 @@
 package com.tj.cardsagainsthumanity.models.cards;
 
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class PackageImport {
     private CardPackage cardPackage;
@@ -27,4 +26,11 @@ public class PackageImport {
                 Objects.equals(getCardsToImport(), that.getCardsToImport());
     }
 
+    public Set<Card> getUniqueCards() {
+        Map<String, Card> uniqueCards = new HashMap<>();
+        for (Card c : getCardsToImport()) {
+            uniqueCards.put(c.getText().toLowerCase(), c);
+        }
+        return new HashSet<>(uniqueCards.values());
+    }
 }

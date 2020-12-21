@@ -4,14 +4,14 @@ import com.tj.cardsagainsthumanity.models.AuditedEntity;
 import com.tj.cardsagainsthumanity.models.gameplay.game.Voter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class Player extends AuditedEntity implements Voter {
+public class Player extends AuditedEntity implements Voter, Serializable {
     public static Player ANONYMOUS = new Player();
 
     @Id
@@ -101,11 +101,12 @@ public class Player extends AuditedEntity implements Voter {
 
     @Override
     public int hashCode() {
-        if(this==Player.ANONYMOUS) {
+        if (this == Player.ANONYMOUS) {
             return UUID.randomUUID().hashCode();
         }
         return this.getId();
     }
+
     @Override
     public boolean equals(Object o) {
         Player player = (Player) o;
@@ -117,11 +118,15 @@ public class Player extends AuditedEntity implements Voter {
     }
 
     public boolean isCzarFor(GameRound round) {
-        return round != null && this.getId() == round.getCzarId();
+        return round != null && this.getId().equals(round.getCzarId());
     }
 
     @Override
     public String getVoterId() {
         return "" + getId();
+    }
+
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
     }
 }

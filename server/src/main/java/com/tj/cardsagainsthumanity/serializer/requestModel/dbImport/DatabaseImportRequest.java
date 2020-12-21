@@ -23,7 +23,22 @@ public class DatabaseImportRequest {
     public Map<String, DatabasePackageImportRequest> getDecks() {
         return decks;
     }
-    
+
+    public Map<String, DatabasePackageImportRequest> getUniqueDecks() {
+        Map<String, DatabasePackageImportRequest> ret = new HashMap<>();
+        for (DatabasePackageImportRequest p : getDecks().values()) {
+            String name = p.getName().toLowerCase();
+            if (ret.containsKey(p.getName())) {
+                ret.put(name, ret.get(name).merge(p));
+            } else {
+                ret.put(name, p);
+            }
+
+        }
+        return ret;
+
+    }
+
 
     @JsonAnySetter
     private void setDecks(String name, DatabasePackageImportRequest deck) {

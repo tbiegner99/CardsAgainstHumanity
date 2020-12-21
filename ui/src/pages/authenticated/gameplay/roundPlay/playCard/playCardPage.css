@@ -1,0 +1,46 @@
+.blackCardDisplay {
+    background: black;
+    font-weight: bold;
+    color:white;
+    padding:20px;
+}
+
+.scrollContainer {
+    width:100%;
+    overflow-x: scroll;
+    padding-top: 10px;
+}
+
+
+
+@media(max-height:600px) {
+    .handCard{
+        max-height:200px;
+        }
+}
+ 
+@media(min-height:800px) {
+    .handCard{
+        max-height:300px;
+        }
+}
+
+
+.handCard {
+    cursor: pointer;
+}
+
+.handCard:hover {
+    background: #CCC;
+}
+
+.selectedCard {
+    background: #999;
+}
+
+.title {
+    width:100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

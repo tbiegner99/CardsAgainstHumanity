@@ -5,6 +5,7 @@
  border-style: solid;
  border-radius: 5px;
  cursor: pointer;
+ outline: 0;
 }
 
 .button:disabled, .button.disabled {

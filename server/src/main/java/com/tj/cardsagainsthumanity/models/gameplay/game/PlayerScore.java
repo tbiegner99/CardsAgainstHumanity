@@ -80,7 +80,7 @@ public class PlayerScore {
     }
 
     private boolean canBeAdded(PlayerScore score) {
-        return score.getPlayerId() == playerId && score.getGameId() == gameId;
+        return score.getPlayerId().equals(playerId) && score.getGameId().equals(gameId);
     }
 
     public void add(PlayerScore score) {

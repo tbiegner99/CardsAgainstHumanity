@@ -14,5 +14,8 @@ public class JoinGameCommand extends BaseCommand<JoinGameRequest> {
         super(ProtocolCommandName.JOIN, arguments);
     }
 
-
+    @Override
+    public boolean isLoginRequired() {
+        return false;
+    }
 }

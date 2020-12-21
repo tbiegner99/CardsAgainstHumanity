@@ -3,11 +3,12 @@ package com.tj.cardsagainsthumanity.client.options.processor;
 import com.tj.cardsagainsthumanity.client.io.InputReader;
 import com.tj.cardsagainsthumanity.client.io.OutputWriter;
 import com.tj.cardsagainsthumanity.client.io.connection.ServerConnection;
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.OptionContext;
 import com.tj.cardsagainsthumanity.client.options.OptionProcessor;
 import com.tj.cardsagainsthumanity.client.options.processor.result.ProcessorResult;
 import com.tj.cardsagainsthumanity.client.options.types.gameManagement.JoinGameOption;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
+import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.JoinGameCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.JoinGameRequest;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.GameResponse;
@@ -35,7 +36,7 @@ public class JoinOptionProcessor implements OptionProcessor<JoinGameOption> {
         GameResponse response = null;
 
         String code = getCode();
-        Command cmd = sendCommand(code, context.getGameState());
+        Command cmd = sendCommand(code, context.getPlayer().get(), context.getGameState());
         response = connection.waitForResponse(GameResponse.class, cmd.getMessageId());
         notifyCreationStatus(response);
 
@@ -43,14 +44,7 @@ public class JoinOptionProcessor implements OptionProcessor<JoinGameOption> {
             return ProcessorResult.failure(context.getGameState());
         }
 
-        Integer gameId = response.getBody().getGameId();
-
-        return ProcessorResult.success(
-                GameState.builder(context.getGameState())
-                        .setCurrentGameId(gameId)
-                        .setState(response.getBody().getState())
-                        .build()
-        );
+        return ProcessorResult.success(response.getBody());
     }
 
     private String getCode() {
@@ -58,10 +52,10 @@ public class JoinOptionProcessor implements OptionProcessor<JoinGameOption> {
         return inputReader.readLine();
     }
 
-    private Command sendCommand(String code, GameState state) {
+    private Command sendCommand(String code, Player currentPlayer, GameStatus state) {
         JoinGameRequest request = new JoinGameRequest();
         request.setCode(code);
-        state.getCurrentPlayerId().ifPresent(request::setPlayerId);
+        request.setPlayerId(currentPlayer.getId());
         JoinGameCommand command = new JoinGameCommand(request);
         connection.sendCommand(command);
         return command;

@@ -1,12 +1,12 @@
 package com.tj.cardsagainsthumanity.client.options.factory;
 
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.OptionContext;
 import com.tj.cardsagainsthumanity.client.options.OptionSet;
 import com.tj.cardsagainsthumanity.client.options.sets.EmptyOptionSet;
 import com.tj.cardsagainsthumanity.client.options.sets.GameJoinedOptionSet;
 import com.tj.cardsagainsthumanity.client.options.sets.LoggedInMenu;
 import com.tj.cardsagainsthumanity.client.options.sets.LoginOptionSet;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,27 +26,27 @@ public class OptionSetDriver {
     }
 
     public OptionSet getOptionsFromContext(OptionContext context) {
-        GameState state = context.getGameState();
-        boolean isLoggedIn = state.getCurrentPlayerId().isPresent();
+        GameStatus state = context.getGameState();
+        boolean isLoggedIn = context.getPlayer().isPresent();
         if (!isLoggedIn) {
             return getLoginOptions(state);
         } else {
-            return optionsForLoggedInUser(state);
+            return optionsForLoggedInUser(context, state);
         }
     }
 
-    private OptionSet getLoginOptions(GameState state) {
+    private OptionSet getLoginOptions(GameStatus state) {
         return loginOptionSet;
     }
 
-    private OptionSet optionsForLoggedInUser(GameState state) {
-        boolean isInGame = state.getCurrentGameId().isPresent();
+    private OptionSet optionsForLoggedInUser(OptionContext context, GameStatus state) {
+        boolean isInGame = state.getGameId() != null;
         if (!isInGame) {
             return getJoinGameOptions(state);
         } else {
-            switch (state.getState().get()) {
+            switch (state.getState()) {
                 case INITIALIZING:
-                    return getWaitingForGameOptions(state);
+                    return getWaitingForGameOptions(context, state);
                 case STARTED:
                     return getGameplayOptions(state);
                 case OVER:
@@ -60,23 +60,23 @@ public class OptionSetDriver {
         return new EmptyOptionSet("Game is over...");
     }
 
-    private OptionSet getGameplayOptions(GameState state) {
+    private OptionSet getGameplayOptions(GameStatus state) {
         return gameplayOptionsFactory.getOptionsFromGameState(state);
     }
 
-    private OptionSet getWaitingForGameOptions(GameState state) {
-        if (state.isPlayerGameManager()) {
+    private OptionSet getWaitingForGameOptions(OptionContext context, GameStatus state) {
+        if (context.isPlayerGameManager()) {
             return getGameManagementInitializationOptions(state);
         } else {
             return new EmptyOptionSet("Waiting for game to start");
         }
     }
 
-    private OptionSet getGameManagementInitializationOptions(GameState state) {
+    private OptionSet getGameManagementInitializationOptions(GameStatus state) {
         return gameInitalizationOptionSet;
     }
 
-    private OptionSet getJoinGameOptions(GameState state) {
+    private OptionSet getJoinGameOptions(GameStatus state) {
         return loggedInMenu;
     }
 }

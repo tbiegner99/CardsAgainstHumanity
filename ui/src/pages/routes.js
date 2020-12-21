@@ -1,13 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import UrlActionCreator from '../actionCreators/UrlActionCreator';
 import NavBar from './navigation/navs/NavBar';
 import LoginPage from './login/ReduxLoginPage';
+import ReduxLogoutPage from './logout/ReduxLogoutPage';
 import AuthenticatedPage from './authenticated/ReduxAuthenticatedPage';
-import AudiencePage from './audience/AudiencePage';
+import AudiencePage from './audience/ReduxAudiencePage';
 import AudienceJoinPage from './audience/JoinGameScreen';
+import AudienceGameScreen from './audience/gameView/ReduxGameScreen';
 import Urls from '../utils/Urls';
 import styles from './main.css';
+import ReduxRegistrationPage from './registration/ReduxRegistrationPage';
 
 class Routing extends React.Component {
   componentDidUpdate(prevProps) {
@@ -18,25 +22,23 @@ class Routing extends React.Component {
   }
 
   render() {
-    const { authenticated } = this.props;
+    const { authenticated, onChangeUrl } = this.props;
     return (
       <main className={styles.mainPage}>
-        <NavBar authenticated={authenticated} onHamburgerClick={() => this.openSideMenu()} />
+        <NavBar
+          authenticated={authenticated}
+          onBrandClick={() => onChangeUrl(Urls.HOME)}
+          onHamburgerClick={() => this.openSideMenu()}
+        />
         <div className={styles.mainContent}>
           <Switch>
-            <Route path={Urls.LOGOUT} />
-            <Route path={Urls.LOGIN}>
-              <LoginPage />
-            </Route>
-            <Route exact path={Urls.Audience.HOME}>
-              <AudiencePage />
-            </Route>
-            <Route exact path={Urls.Audience.JOIN}>
-              <AudienceJoinPage />
-            </Route>
-            <Route path="/auth">
-              <AuthenticatedPage />
-            </Route>
+            <Route path={Urls.LOGOUT} component={ReduxLogoutPage} />
+            <Route path={Urls.LOGIN} component={LoginPage} />
+            <Route path={Urls.REGISTER} component={ReduxRegistrationPage} />
+            <Route exact path={Urls.Audience.HOME} component={AudiencePage} />
+            <Route exact path={Urls.Audience.JOIN} component={AudienceJoinPage} />
+            <Route exact path={Urls.Audience.GAME} component={AudienceGameScreen} />
+            <Route path="/auth" component={AuthenticatedPage} />
             <Route path="/">
               <Redirect to={Urls.LOGIN} />
             </Route>
@@ -51,7 +53,8 @@ const Navigation = withRouter(Routing);
 
 const mapStateToProps = (state) => ({
   currentUrl: state.application.store.currentUrl,
-  authenticated: state.user.store.authenticated.value
+  authenticated: state.user.store.authenticated.value,
+  onChangeUrl: (url) => UrlActionCreator.changeUrl(url)
 });
 
 const ConnectedNavigation = connect(mapStateToProps)(Navigation);

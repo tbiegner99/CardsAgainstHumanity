@@ -1,0 +1,86 @@
+version: '3'
+services:
+  hub:
+    image: selenium/hub
+    container_name: hub
+    ports:
+      - '4444:4444'
+    environment:
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
+      PORT: 4444
+      GRID_MAX_SESSION: 10
+      GRID_BROWSER_TIMEOUT: 300
+      GRID_TIMEOUT: 300
+  chrome1:
+    image: selenium/node-chrome-debug
+    container_name: chrome1
+    depends_on:
+      - hub
+    environment:
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
+      NODE_MAX_SESSION: 5
+      NODE_MAX_INSTANCES: 5
+      SE_OPTS: -host chrome1 -port 5000
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    links:
+      - hub
+    ports:
+      - '9001:5900'
+      - '9222:9222'
+
+  chrome2:
+    image: selenium/node-chrome-debug
+    container_name: chrome2
+    depends_on:
+      - hub
+    environment:
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
+      NODE_MAX_SESSION: 5
+      NODE_MAX_INSTANCES: 5
+      SE_OPTS: -host chrome2 -port 5000
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    links:
+      - hub
+    ports:
+      - '9002:5900'
+      - '9223:9222'
+
+#  test:
+#    build: openjdk
+#    depends_on:
+#      - hub
+#      - chrome1
+#      - chrome2
+#    environment:
+#      - GRID_HOST=hub
+#      - GRID_PORT=4444
+#      - GRID_PATH=/wd/hub
+#      #- TEST_ENV_OVERRIDE=local
+#      #- TEST_HOST_OVERRIDE=docker.for.mac.host.internal
+#      #- TEST_PROTOCOL_OVERRIDE=http
+#      #- TEST_PORT_OVERRIDE=80
+#      - TEST_ENV_OVERRIDE=stag
+#      - TEST_HOST_OVERRIDE=stag.lifion.oneadp.com
+#      - TEST_PROTOCOL_OVERRIDE=https
+#      - TEST_PORT_OVERRIDE=443
+#      - DOCKER=true
+#      - DEBUG=false
+#      - MAX_INSTANCES=4
+#      - MAX_RETRIES=4
+#      - ACCEPTANCE_DEMO=false
+#      - VIDEO=false
+#      # - HOME_PAGE=/auth/account-settings
+#      #- UI_URL=http://docker.for.mac.host.internal:80
+#      - UI_URL=https://stag.lifion.adp.com
+#      - INCLUDE_SPEC=/srv/package/spec/smoke/scenarios/*
+#    volumes:
+#      - ./test:/srv/package/test
+#      - ./pom.conf.js:/srv/package/pom.xml
+#    command: mvn run test

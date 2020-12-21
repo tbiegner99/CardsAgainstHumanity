@@ -1,7 +1,7 @@
 package com.tj.cardsagainsthumanity.server.protocol.impl.message.command;
 
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.PlayerRequest;
+import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.CreateGameRequest;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.message.Message;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class CreateGameCommandTest {
     @Test
     public void testJsonSerialization() {
         JSONSerializer serializer = new JSONSerializer();
-        PlayerRequest request = new PlayerRequest();
+        CreateGameRequest request = new CreateGameRequest();
         request.setPlayerId(6);
         CreateGameCommand command = new CreateGameCommand(request);
         command.setMessageId("someId");
@@ -39,7 +39,7 @@ public class CreateGameCommandTest {
         BaseCommand command = (BaseCommand) serializer.deserializeMessage(serializedData);
         assertTrue(command instanceof CreateGameCommand);
         assertEquals(command.getCommandName(), "CREATE_GAME");
-        assertEquals(( (CreateGameCommand) command ).getArguments().getPlayerId().intValue(), 6);
+        assertEquals(((CreateGameCommand) command).getArguments().getPlayerId().intValue(), 6);
     }
 
 }

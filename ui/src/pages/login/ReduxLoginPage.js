@@ -8,7 +8,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = () => ({
-  onCheckLogin: (username, password) => UserActionCreator.login(username, password)
+  onCheckLogin: (username, password, redirectUrl) =>
+    UserActionCreator.login(username, password, redirectUrl)
 });
 
 export default connect(

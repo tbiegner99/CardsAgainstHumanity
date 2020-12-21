@@ -1,5 +1,6 @@
 package com.tj.cardsagainsthumanity.server;
 
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
 import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.io.MessageSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.ProtocolIO;
@@ -41,10 +42,12 @@ public class GameServerTest {
     InputStream inputStream;
     @Mock
     OutputStream outputStream;
+    @Mock
+    GameStatusFactory gameStatusFactory;
 
     @Before
     public void setUp() throws Exception {
-        GameServer server = new GameServer(socket, commandProcessor, serializer);
+        GameServer server = new GameServer(socket, commandProcessor, serializer, gameStatusFactory);
         mockServer = spy(server);
         when(mockSocket.getInetAddress()).thenReturn(mockAddr);
         when(mockAddr.getHostAddress()).thenReturn("someName");
@@ -84,7 +87,7 @@ public class GameServerTest {
     @Test
     public void testAcceptConnection() throws Exception {
         ProtocolIO expectedIO = new ProtocolIO(inputStream, outputStream, serializer);
-        PlayerConnection expected = new PlayerConnection("someName", mockServer, expectedIO, expectedIO, commandProcessor);
+        PlayerConnection expected = new PlayerConnection("someName", mockServer, expectedIO, expectedIO, commandProcessor, gameStatusFactory);
         PlayerConnection connection = mockServer.acceptConnection();
         verify(socket, times(1)).accept();
         assertEquals(expected, connection);

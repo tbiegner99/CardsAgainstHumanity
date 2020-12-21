@@ -16,3 +16,10 @@ h5.nameText {
 .scoreLabel {
     font-size: 1.5vh;
 }
+.hasWinner {
+    opacity: .2
+}
+.winner {
+    background: #bbb;
+    opacity:1;
+}

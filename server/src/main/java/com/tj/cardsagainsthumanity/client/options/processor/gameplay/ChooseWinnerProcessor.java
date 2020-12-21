@@ -1,13 +1,12 @@
 package com.tj.cardsagainsthumanity.client.options.processor.gameplay;
 
 import com.tj.cardsagainsthumanity.client.io.connection.ServerConnection;
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.OptionContext;
 import com.tj.cardsagainsthumanity.client.options.OptionProcessor;
 import com.tj.cardsagainsthumanity.client.options.processor.result.ProcessorResult;
 import com.tj.cardsagainsthumanity.client.options.types.gameplay.ChooseWinnerOption;
+import com.tj.cardsagainsthumanity.models.gameStatus.RoundStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundCardPlay;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay.ChooseWinnerCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.RoundStatusResponse;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ public class ChooseWinnerProcessor implements OptionProcessor<ChooseWinnerOption
         ServerConnection connection = context.getConnection();
         RoundStatusResponse response = connection.waitForResponse(RoundStatusResponse.class, command);
         RoundStatus roundStatus = response.getBody();
-        GameState newState = GameState.builder(context.getGameState()).setCurrentRound(roundStatus).build();
-        return ProcessorResult.success(newState);
+
+        return ProcessorResult.success(null);
     }
 }

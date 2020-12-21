@@ -6,6 +6,7 @@ public class EmptyResponse extends BaseResponse {
 
     public static final EmptyResponse NO_CONTENT = new EmptyResponse(null, 204, "No Content");
     public static final EmptyResponse FORBIDDEN = new EmptyResponse(null, 403, "Forbidden");
+    public static final EmptyResponse NOT_FOUND = new EmptyResponse(null, 404, "Not Found");
     public static final EmptyResponse METHOD_NOT_FOUND = new EmptyResponse(null, 405, "Method Not Found");
     public static final EmptyResponse INTERNAL_SERVER_ERROR = new EmptyResponse(null, 500, "Internal Server Error");
 

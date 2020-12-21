@@ -1,5 +1,6 @@
 package com.tj.cardsagainsthumanity.server;
 
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
 import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.io.MessageSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.ProtocolIO;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 @Component
 public class GameServer implements Runnable, ConnectionCloseHandler {
+    private final GameStatusFactory gameStatusFactory;
     private ServerSocket socket;
     private CommandProcessor genericProcessor;
     private MessageSerializer serializer;
@@ -26,11 +28,12 @@ public class GameServer implements Runnable, ConnectionCloseHandler {
     private Set<PlayerConnection> openConnections;
 
     @Autowired
-    public GameServer(ServerSocket socket, @Qualifier("genericProcessor") CommandProcessor genericProcessor, MessageSerializer serializer) {
+    public GameServer(ServerSocket socket, @Qualifier("genericProcessor") CommandProcessor genericProcessor, MessageSerializer serializer, GameStatusFactory gameStatusFactory) {
         this.genericProcessor = genericProcessor;
         this.socket = socket;
         this.openConnections = new HashSet<>();
         this.serializer = serializer;
+        this.gameStatusFactory = gameStatusFactory;
     }
 
     public Set<PlayerConnection> getConnections() {
@@ -69,7 +72,7 @@ public class GameServer implements Runnable, ConnectionCloseHandler {
         client.setSoTimeout(100);
         ProtocolIO socketIO = createIO(client);
         String connectionName = client.getInetAddress().getHostAddress();
-        return new PlayerConnection(connectionName, this, socketIO, socketIO, genericProcessor);
+        return new PlayerConnection(connectionName, this, socketIO, socketIO, genericProcessor, gameStatusFactory);
     }
 
     private ProtocolIO createIO(Socket socket) throws IOException {

@@ -18,11 +18,14 @@ import com.tj.cardsagainsthumanity.models.cards.WhiteCard;
 import com.tj.cardsagainsthumanity.models.gameplay.CardPlay;
 import com.tj.cardsagainsthumanity.models.gameplay.Game;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
+import com.tj.cardsagainsthumanity.models.gameplay.game.PlayerHandCard;
 import com.tj.cardsagainsthumanity.models.gameplay.game.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class NormalGameDriver implements GameDriver {
     private final GameEventManager eventManager;
@@ -33,7 +36,7 @@ public class NormalGameDriver implements GameDriver {
     private CardDao cardDao;
     private CzarGenerator czarGenerator;
     private RoundDriverFactory roundDriverFactory;
-    private HandManager handManager;
+    private HandManager<WhiteCard> handManager;
     private DrawStrategy drawStrategy;
 
 
@@ -47,6 +50,7 @@ public class NormalGameDriver implements GameDriver {
         this.eventManager = eventManager;
         this.czarGenerator = new CzarGenerator(game.getPlayers());
         this.drawStrategy = drawStrategy;
+        this.currentRound = roundDriverFactory.createGameRound(this, game.getCurrentRound(), eventManager, eventFactory);
 
 
     }
@@ -83,6 +87,16 @@ public class NormalGameDriver implements GameDriver {
         GameEvent evt = eventFactory.createGameChangeEvent(this);
         eventManager.dispatchGameChangeEvent(evt);
 
+    }
+
+    @Override
+    public List<Player> getCzarOrder() {
+        return this.czarGenerator.getCzarOrder();
+    }
+
+    @Override
+    public Integer getCzarPositionFor(Integer playerId) {
+        return czarGenerator.getCzarIndexForPlayer(playerId);
     }
 
     @Override
@@ -156,6 +170,11 @@ public class NormalGameDriver implements GameDriver {
         czarGenerator.addPlayer(player);
         handManager.fillOutHandForPlayer(player, drawStrategy);
         game.setPlayerHands(handManager.getAllCardsInHand());
+        Set<PlayerHandCard> addedCards = handManager.getCardsInHandForPlayer(player)
+                .stream()
+                .map(card -> new PlayerHandCard(game, player, card))
+                .collect(Collectors.toSet());
+        game.getCardsInPlay().addAll(addedCards);
         game.addPlayerToScoreboard(player);
         this.save();
         PlayerEvent evt = eventFactory.createPlayerCreatedEvent(this, player);
@@ -178,6 +197,11 @@ public class NormalGameDriver implements GameDriver {
     @Override
     public void addAudienceMember() {
 
+    }
+
+    @Override
+    public boolean isPlayerInGame(Player player) {
+        return czarGenerator.isPlayerInGame(player.getId());
     }
 
     @Override
@@ -239,5 +263,40 @@ public class NormalGameDriver implements GameDriver {
     @Override
     public void registerPlayerStateChangeEvent(PlayerStateChangeHandler handler) {
         eventManager.registerPlayerStateChangeEvent(handler);
+    }
+
+    @Override
+    public void unregisterGameStartedHandler(GameStartedEventHandler handler) {
+        eventManager.unregisterGameStartedHandler(handler);
+    }
+
+    @Override
+    public void unregisterGameOverHandler(GameOverEventHandler handler) {
+        eventManager.unregisterGameOverHandler(handler);
+    }
+
+    @Override
+    public void unregisterGameStateChangeHandler(GameStateChangeEventHandler handler) {
+        eventManager.unregisterGameStateChangeHandler(handler);
+    }
+
+    @Override
+    public void unregisterRoundStartedHandler(RoundStartedEventHandler handler) {
+        eventManager.unregisterRoundStartedHandler(handler);
+    }
+
+    @Override
+    public void unregisterRoundOverHandler(RoundOverEventHandler handler) {
+        eventManager.unregisterRoundOverHandler(handler);
+    }
+
+    @Override
+    public void unregisterRoundStateChangeHandler(RoundStateChangeEventHandler handler) {
+        eventManager.unregisterRoundStateChangeHandler(handler);
+    }
+
+    @Override
+    public void unregisterPlayerStateChangeEvent(PlayerStateChangeHandler handler) {
+        eventManager.unregisterPlayerStateChangeEvent(handler);
     }
 }

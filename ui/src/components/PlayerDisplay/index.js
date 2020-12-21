@@ -12,11 +12,7 @@ const PlayerRow = (props) => {
   const { player } = props;
   return (
     <div className={styles.playerRow}>
-      <strong className={styles.displayName}>{player.displayName}</strong>(
-      <i>
-        {player.firstName} {player.lastName}
-      </i>
-      )
+      <strong className={styles.displayName}>{player.displayName}</strong>(<i>{player.name}</i>)
     </div>
   );
 };

@@ -1,0 +1,29 @@
+.packageRow {
+    display: flex;
+    width: 100%;
+    padding:10px 20px;
+    justify-content: space-around;
+    align-items: center;
+}
+ 
+.actions {
+    display: flex;
+}
+
+.action {
+    padding:10px;
+    width:40px; 
+    height:40px;
+    font-size: 20px;
+    cursor:pointer;
+}
+
+.icon {
+    width:30px;
+    height:30px;
+}
+
+.display {
+    flex-grow: 1;
+    padding: 0 20px;
+}

@@ -1,6 +1,7 @@
 package com.tj.cardsagainsthumanity.services.gameplay;
 
 import com.tj.cardsagainsthumanity.core.game.GameDriver;
+import com.tj.cardsagainsthumanity.dao.DeckDao;
 import com.tj.cardsagainsthumanity.dao.gameplay.GameDriverDao;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.models.gameplay.game.Scoreboard;
@@ -21,6 +22,8 @@ public class GameServiceTest {
     @Mock
     private GameDriverDao gameDao;
     @Mock
+    private DeckDao deckDao;
+    @Mock
     private GameDriver mockDriver;
     @Mock
     private Scoreboard mockScore;
@@ -29,7 +32,7 @@ public class GameServiceTest {
 
     @Before
     public void setup() {
-        service = new GameService(gameDao);
+        service = new GameService(gameDao, deckDao);
         when(gameDao.getGame(7)).thenReturn(mockDriver);
         when(gameDao.getGameByCode(mockCode)).thenReturn(mockDriver);
         when(gameDao.createGameDriver(any())).thenReturn(mockDriver);

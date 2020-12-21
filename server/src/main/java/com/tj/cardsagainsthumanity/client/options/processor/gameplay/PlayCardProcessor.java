@@ -9,10 +9,11 @@ import com.tj.cardsagainsthumanity.client.options.processor.result.ProcessorResu
 import com.tj.cardsagainsthumanity.client.options.types.gameplay.PlayCardOption;
 import com.tj.cardsagainsthumanity.client.utils.CardUtilities;
 import com.tj.cardsagainsthumanity.exceptions.PlayCancelledException;
+import com.tj.cardsagainsthumanity.models.gameStatus.PlayerGameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.RoundStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseResponse;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.CardPlayRequest;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundBlackCard;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundWhiteCard;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay.PlayCardCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,9 @@ public class PlayCardProcessor implements OptionProcessor<PlayCardOption> {
 
     @Override
     public ProcessorResult processOption(PlayCardOption option, OptionContext context) {
-        RoundStatus roundState = context.getGameState().getCurrentRound().get();
+        RoundStatus roundState = context.getGameState().getRound();
         RoundBlackCard blackCard = roundState.getBlackCard();
-        List<RoundWhiteCard> handCards = new ArrayList<>(context.getGameState().getCardsInHand().get());
+        List<RoundWhiteCard> handCards = new ArrayList<>(((PlayerGameStatus) context.getGameState()).getHandCards());
         printBlackCard(blackCard);
         printCurrentHand(handCards);
 

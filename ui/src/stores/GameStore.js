@@ -11,7 +11,8 @@ class GameStore extends AbstractReducingStore {
       gameCode: new StoreField('gameCode', null),
       gameState: new StoreField('gameState', null),
       players: new StoreField('players', []),
-      handCards: new StoreField('handCards', null)
+      handCards: new StoreField('handCards', null),
+      deck: new StoreField('deck', null)
     };
   }
 
@@ -35,6 +36,10 @@ class GameStore extends AbstractReducingStore {
     return this.data.handCards;
   }
 
+  get deck() {
+    return this.data.deck;
+  }
+
   handleEvent(action) {
     switch (action.type) {
       case GameActions.GAME_CREATED:
@@ -43,11 +48,14 @@ class GameStore extends AbstractReducingStore {
         this.data.gameState.value = action.data.state;
         this.data.players.value = action.data.players;
         this.data.handCards.value = action.data.currentHand;
+        this.data.deck.value = action.data.deck;
         break;
       case GameActions.GAME_STATUS:
         this.data.gameId.value = action.data.gameId;
-        this.data.gameState.value = action.data.state;
+        this.data.gameState.value = action.data.gameState;
         this.data.handCards.value = action.data.currentHand;
+        this.data.deck.value = action.data.deck;
+        this.data.gameCode.value = action.data.code;
         if (action.data.players) {
           this.data.players.value = action.data.players;
         }

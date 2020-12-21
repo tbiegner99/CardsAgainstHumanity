@@ -1,5 +1,9 @@
 package com.tj.cardsagainsthumanity.server.websocket;
 
+import com.tj.cardsagainsthumanity.core.game.GameDriver;
+import com.tj.cardsagainsthumanity.dao.gameplay.GameDriverDao;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
+import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.security.auth.PlayerUserDetails;
 import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
@@ -18,11 +22,15 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final JSONSerializer serializer;
     private final CommandProcessor commandProcessor;
     private WebSocketConnectionManager connectionManager;
+    private GameStatusFactory gameStatusFactory;
+    private GameDriverDao gameDriverDao;
 
-    public WebSocketHandler(@Qualifier("genericProcessor") @Autowired CommandProcessor commandProcessor, @Autowired WebSocketConnectionManager connectionManager, @Autowired JSONSerializer serializer) {
+    public WebSocketHandler(@Qualifier("genericProcessor") @Autowired CommandProcessor commandProcessor, @Autowired WebSocketConnectionManager connectionManager, @Autowired JSONSerializer serializer, @Autowired GameStatusFactory gameStatusFactory, @Autowired GameDriverDao gameDriverDao) {
         this.connectionManager = connectionManager;
+        this.gameDriverDao = gameDriverDao;
         this.serializer = serializer;
         this.commandProcessor = commandProcessor;
+        this.gameStatusFactory = gameStatusFactory;
     }
 
     @Override
@@ -37,13 +45,32 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private WebSocketConnection createWebSocketConnection(WebSocketSession session) {
         WebSocketProtocolWriter writer = new WebSocketProtocolWriter(session, serializer);
-        Authentication auth = (Authentication) session.getPrincipal();
-        PlayerUserDetails user = (PlayerUserDetails) auth.getPrincipal();
-        WebSocketConnection connection = new WebSocketConnection(session, writer, commandProcessor);
+        Player user = null;
+        if (session != null) {
+            Authentication auth = (Authentication) session.getPrincipal();
+            if (auth != null) {
+                user = ((PlayerUserDetails) auth.getPrincipal()).getPlayer();
+            }
+        }
+        WebSocketConnection connection = new WebSocketConnection(session, writer, commandProcessor, gameStatusFactory);
+
+        joinCurrentGame(user, session, connection);
+
         connection.getConnectionContext()
-                .login(user.getPlayer());
+                .login(user);
         return connection;
     }
+
+    private void joinCurrentGame(Player currentPlayer, WebSocketSession session, WebSocketConnection connection) {
+        Object currentGame = session.getAttributes().get("currentGame");
+        if (currentGame != null) {
+            GameDriver game = gameDriverDao.getGameByCode(currentGame.toString());
+            connection.getConnectionContext().setGameHandler(connection);
+            connection.getConnectionContext().joinGame(game);
+
+        }
+    }
+
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {

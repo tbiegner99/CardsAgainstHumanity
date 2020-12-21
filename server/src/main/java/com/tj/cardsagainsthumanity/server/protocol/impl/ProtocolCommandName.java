@@ -6,11 +6,14 @@ public enum ProtocolCommandName {
     HOST_GAME,
     JOIN,
     LEAVE,
-    PLAY,
+    PLAY_CARD,
     CHOOSE_WINNER,
     LIKE,
     DISLIKE,
     ROUND_STATUS,
     GAME_STATUS,
-    START_GAME
+    LOAD_GAME,
+    START_GAME,
+    END_ROUND,
+    REVEAL
 }

@@ -4,9 +4,21 @@ import { FlipCard, FrontFace, BackFace } from '../FlipCard';
 
 import style from './index.css';
 
-const Instructions = {
+export const Instructions = {
   DRAW2_PICK3: 'draw2pick3',
-  PICK2: 'pick2'
+  PICK2: 'pick2',
+  getInstructionForNumberOfAnswers: (numberOfAnswers) => {
+    switch (numberOfAnswers) {
+      case 1:
+        return null;
+      case 2:
+        return Instructions.PICK2;
+      case 3:
+        return Instructions.DRAW2_PICK3;
+      default:
+        throw new Error('Illegal number of answers');
+    }
+  }
 };
 
 const renderPackIcon = () => (

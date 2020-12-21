@@ -2,15 +2,13 @@ package com.tj.cardsagainsthumanity.server.protocol.impl.processor;
 
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseResponse;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.CreateGameCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.JoinGameCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.LoginCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.StartGameCommand;
+import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.*;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay.ChooseWinnerCommand;
+import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay.EndRoundCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay.PlayCardCommand;
+import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay.RevealPlayCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.EmptyResponse;
-import com.tj.cardsagainsthumanity.server.protocol.impl.processor.gameplay.ChooseWinnerProcessor;
-import com.tj.cardsagainsthumanity.server.protocol.impl.processor.gameplay.PlayCardCommandProcessor;
+import com.tj.cardsagainsthumanity.server.protocol.impl.processor.gameplay.*;
 import com.tj.cardsagainsthumanity.server.protocol.message.Command;
 import com.tj.cardsagainsthumanity.server.protocol.message.CommandContext;
 import com.tj.cardsagainsthumanity.server.protocol.message.Response;
@@ -48,6 +46,16 @@ public class GenericCommandProcessorTest {
     ChooseWinnerProcessor chooseWinnerProcessor;
     ChooseWinnerCommand chooseWinnerCommand = new ChooseWinnerCommand();
     @Mock
+    LoadGameProcessor loadGameProcessor;
+    LoadGameCommand loadGameCommand = new LoadGameCommand();
+    @Mock
+    RevealPlayProcessor revealPlayProcessor;
+    RevealPlayCommand revealPlayCommand = new RevealPlayCommand();
+    @Mock
+    EndRoundProcessor endRoundProcessor;
+    EndRoundCommand endRoundCommand = new EndRoundCommand();
+
+    @Mock
     CommandContext context;
     @Mock
     BaseResponse mockResponse;
@@ -59,7 +67,7 @@ public class GenericCommandProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        processor = new GenericCommandProcessor(startGameCommandProcessor, loginCommandProcessor, createGameCommandProcessor, joinGameCommandProcessor, playCardCommandProcessor, chooseWinnerProcessor);
+        processor = new GenericCommandProcessor(startGameCommandProcessor, loginCommandProcessor, createGameCommandProcessor, joinGameCommandProcessor, playCardCommandProcessor, chooseWinnerProcessor, loadGameProcessor, revealPlayProcessor, endRoundProcessor);
         when(context.getPlayer()).thenReturn(Optional.of(loggedInPlayer));
         when(loginCommandProcessor.processMessage(loginCommand, context)).thenReturn(mockResponse);
         when(createGameCommandProcessor.processMessage(createGameCommand, context)).thenReturn(mockResponse);

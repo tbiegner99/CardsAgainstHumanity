@@ -17,6 +17,7 @@ import com.tj.cardsagainsthumanity.models.gameplay.game.Voter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class NormalGameRoundDriver implements RoundDriver {
     private final GameEventDispatcher eventDispatcher;
@@ -35,7 +36,7 @@ public class NormalGameRoundDriver implements RoundDriver {
 
     @Override
     public void save() {
-        roundDao.saveGameRound(round);
+        round = roundDao.saveGameRound(round);
     }
 
     @Override
@@ -57,6 +58,18 @@ public class NormalGameRoundDriver implements RoundDriver {
     @Override
     public void playCards(CardPlay play) {
         round.addCardPlay(play);
+        save();
+        RoundEvent roundChangeEvent = new RoundEvent(game, this, EventName.RoundEvents.ROUND_STATE_CHANGE);
+        eventDispatcher.dispatchRoundChangeEvent(roundChangeEvent);
+    }
+
+    @Override
+    public void revealPlay(Player czar) {
+        if (!czar.isCzarFor(round)) {
+            throw new IllegalStateException("You are not the czar for this round");
+        }
+        round.revealNext();
+        save();
         RoundEvent roundChangeEvent = new RoundEvent(game, this, EventName.RoundEvents.ROUND_STATE_CHANGE);
         eventDispatcher.dispatchRoundChangeEvent(roundChangeEvent);
     }
@@ -69,11 +82,14 @@ public class NormalGameRoundDriver implements RoundDriver {
     @Override
     public void declareWinner(Player czar, CardPlay play) {
         if (!czar.isCzarFor(round)) {
-            throw new IllegalArgumentException("You are not the czar for this round");
+            throw new IllegalStateException("You are not the czar for this round");
         }
         round.setWinner(play);
-        endRound();
+
+        // endRound();
         save();
+        RoundEvent roundChangeEvent = new RoundEvent(game, this, EventName.RoundEvents.ROUND_STATE_CHANGE);
+        eventDispatcher.dispatchRoundChangeEvent(roundChangeEvent);
     }
 
     @Override
@@ -128,4 +144,15 @@ public class NormalGameRoundDriver implements RoundDriver {
                 Objects.equals(getRound(), that.getRound());
     }
 
+    @Override
+    public GameDriver getGame() {
+        return game;
+    }
+
+    @Override
+    public Optional<CardPlay> getPlayForPlayer(Player currentPlayer) {
+        return getAllCardPlays().stream()
+                .filter(play -> play.getPlayer().getId() == currentPlayer.getId())
+                .findFirst();
+    }
 }

@@ -1,7 +1,5 @@
-
 package com.tj.cardsagainsthumanity.serializer.converter.card;
 
-import com.tj.cardsagainsthumanity.models.cards.CardPackage;
 import com.tj.cardsagainsthumanity.models.cards.WhiteCard;
 import com.tj.cardsagainsthumanity.serializer.RequestConverter;
 import com.tj.cardsagainsthumanity.serializer.requestModel.card.CreateCardRequest;
@@ -24,12 +22,7 @@ public class CreateWhiteCardRequestConverter implements RequestConverter<CreateC
         Integer packageId = objectToConvert.getPackageId();
         String text = objectToConvert.getCardText();
 
-        CardPackage packageFromId = null;
-        if (packageId != null) {
-            packageFromId = packageService.getCardPackageById(packageId);
-        }
-
-        return new WhiteCard(packageFromId, text);
+        return new WhiteCard(null, text);
     }
 
 

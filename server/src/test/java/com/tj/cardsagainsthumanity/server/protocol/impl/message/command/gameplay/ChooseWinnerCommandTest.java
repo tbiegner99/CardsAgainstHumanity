@@ -1,16 +1,15 @@
 package com.tj.cardsagainsthumanity.server.protocol.impl.message.command.gameplay;
 
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.RoundStatusCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundCardPlay;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundStatus;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.message.Message;
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ChooseWinnerCommandTest {
     @Before

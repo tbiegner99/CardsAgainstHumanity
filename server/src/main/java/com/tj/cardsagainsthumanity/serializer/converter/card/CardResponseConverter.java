@@ -22,7 +22,7 @@ public class CardResponseConverter implements ResponseConverter<Card, CardRespon
         return new CardResponse(
                 businessObject.getId(),
                 businessObject.getText(),
-                getPackageFrom(businessObject.getPackage())
+                getPackageFrom(businessObject.getCardPackage())
         );
     }
 

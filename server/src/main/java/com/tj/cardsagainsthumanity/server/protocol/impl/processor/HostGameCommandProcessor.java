@@ -1,13 +1,12 @@
 package com.tj.cardsagainsthumanity.server.protocol.impl.processor;
 
 import com.tj.cardsagainsthumanity.core.game.GameDriver;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseResponse;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.HostGameCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundStatus;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.body.ExtendedGameResponseBody;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.body.GameResponseBody;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.body.PlayerResponseBody;
 import com.tj.cardsagainsthumanity.server.protocol.message.CommandContext;
 import com.tj.cardsagainsthumanity.services.gameplay.GameService;
@@ -16,19 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class HostGameCommandProcessor implements CommandProcessor<HostGameCommand, BaseResponse<GameResponseBody>> {
+public class HostGameCommandProcessor implements CommandProcessor<HostGameCommand, BaseResponse<GameStatus>> {
 
+    private final GameStatusFactory gameStatusFactory;
     private GameService gameService;
     private PlayerService playerService;
 
     @Autowired
-    public HostGameCommandProcessor(GameService gameService, PlayerService playerService) {
+    public HostGameCommandProcessor(GameService gameService, PlayerService playerService, GameStatusFactory gameStatusFactory) {
         this.gameService = gameService;
         this.playerService = playerService;
+        this.gameStatusFactory = gameStatusFactory;
     }
 
     private PlayerResponseBody mapPlayerToPlayerResponse(Player player) {
@@ -37,15 +36,13 @@ public class HostGameCommandProcessor implements CommandProcessor<HostGameComman
 
     @Transactional()
     @Override
-    public BaseResponse<GameResponseBody> processMessage(HostGameCommand messageToProcess, CommandContext context) {
+    public BaseResponse<GameStatus> processMessage(HostGameCommand messageToProcess, CommandContext context) {
         GameDriver driver = gameService.newGame();
+        Player currentPlayer = context.getPlayer().orElseGet(null);
         context.joinGame(driver);
         driver.save();
 
-        List<PlayerResponseBody> players = driver.getPlayers().stream().map(this::mapPlayerToPlayerResponse).collect(Collectors.toList());
-        RoundStatus roundStatus = RoundStatus.fromRound(driver.getCurrentRound());
-        GameResponseBody body = new ExtendedGameResponseBody(driver.getState(), driver.getCode(), driver.getGameId(), roundStatus, null, players);
-
+        GameStatus body = gameStatusFactory.buildGameStatus(currentPlayer, driver);
         return new BaseResponse<>(messageToProcess.getMessageId(), 201, "Created", body);
     }
 }

@@ -16,4 +16,18 @@ public interface GameEventRegistry {
     void registerRoundStateChangeHandler(RoundStateChangeEventHandler handler);
 
     void registerPlayerStateChangeEvent(PlayerStateChangeHandler handler);
+
+    void unregisterGameStartedHandler(GameStartedEventHandler handler);
+
+    void unregisterGameOverHandler(GameOverEventHandler handler);
+
+    void unregisterGameStateChangeHandler(GameStateChangeEventHandler handler);
+
+    void unregisterRoundStartedHandler(RoundStartedEventHandler handler);
+
+    void unregisterRoundOverHandler(RoundOverEventHandler handler);
+
+    void unregisterRoundStateChangeHandler(RoundStateChangeEventHandler handler);
+
+    void unregisterPlayerStateChangeEvent(PlayerStateChangeHandler handler);
 }

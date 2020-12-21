@@ -25,6 +25,20 @@ class UserActionCreator extends BaseActionCreator {
     }
   }
 
+  async loadDecksForUser() {
+    try {
+      const decks = await UserDatasource.loadMyDecks();
+      this.dispatch({
+        type: UserActions.USER_DECKS_LOADED,
+        data: decks
+      });
+    } catch (err) {
+      this.dispatch({
+        type: UserActions.Errors.LOAD_DECK_FAILURE
+      });
+    }
+  }
+
   async login(username, password, redirectLocation) {
     try {
       await UserDatasource.login(username, password);
@@ -38,6 +52,40 @@ class UserActionCreator extends BaseActionCreator {
       this.dispatch({
         type: UserActions.Errors.LOGIN_FAILURE
       });
+      throw err;
+    }
+  }
+
+  async createUser(data) {
+    try {
+      const userData = await UserDatasource.createUser(data);
+      this.dispatch({
+        type: UserActions.USER_CREATED,
+        data: userData
+      });
+      this.changeUrl(Urls.HOME);
+      await this.websocketDatasource.ensureConnected();
+    } catch (err) {
+      this.dispatch({
+        type: UserActions.Errors.USER_CREATE_FAILURE
+      });
+      throw err;
+    }
+  }
+
+  async logout() {
+    try {
+      await UserDatasource.logout();
+      const logoutEvent = {
+        type: UserActions.LOGOUT_SUCCESS
+      };
+      this.dispatch(logoutEvent);
+      this.changeUrl(Urls.LOGIN);
+    } catch (err) {
+      this.dispatch({
+        type: UserActions.Errors.LOGOUT_FAILURE
+      });
+      throw err;
     }
   }
 }

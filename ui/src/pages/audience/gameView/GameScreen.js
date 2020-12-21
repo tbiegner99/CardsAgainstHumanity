@@ -1,5 +1,6 @@
 import React from 'react';
 import combineClasses from 'classnames';
+import { H4 } from '../../../components/elements/headers/Headers';
 import { BlackCard, WhiteCard } from '../../../components/CardsAgainstHumanityCard';
 import PlayerList from './playerList/PlayerList';
 import styles from './gameScreen.css';
@@ -41,12 +42,16 @@ class GameScreen extends React.Component {
   }
 
   computeState() {
+    if (!this.props.blackCard) {
+      return {};
+    }
     const {
       blackCard: { numberOfAnswers },
-      revealedCards,
-      winningPlayId
-    } = this.props.roundData;
+      revealedPlays,
+      winner
+    } = this.props;
 
+    const winningPlayId = winner ? winner.id : null;
     let rows = 0;
     let cardsFit = false;
     let newCardHeight;
@@ -65,13 +70,13 @@ class GameScreen extends React.Component {
       const horizontalSpace = getSpaceSize();
       const spacePerPlay = numberOfAnswers * cardWidth + horizontalSpace;
       maxAnswersPerRow = Math.floor(rowWidth / spacePerPlay);
-      const neededRows = revealedCards.length / maxAnswersPerRow;
+      const neededRows = revealedPlays.length / maxAnswersPerRow;
 
       cardsFit = neededRows <= rows;
     }
 
-    const answersPerRow = Math.ceil(revealedCards.length / rows);
-    const hasWinningPlay = revealedCards.filter((item) => item.playId === winningPlayId).length > 0;
+    const answersPerRow = Math.ceil(revealedPlays.length / rows);
+    const hasWinningPlay = revealedPlays.filter((item) => item.id === winningPlayId).length > 0;
 
     return {
       cardWidth,
@@ -93,7 +98,7 @@ class GameScreen extends React.Component {
   getWinningPlayStyle(cardIndex) {
     const {
       blackCard: { numberOfAnswers }
-    } = this.props.roundData;
+    } = this.props;
     const rowSize = getRoundContentSize();
     const numberOfCards = numberOfAnswers + 1;
     const spaces = numberOfCards * getSpaceSize();
@@ -121,7 +126,7 @@ class GameScreen extends React.Component {
   }
 
   renderPlayedCards() {
-    const { numberOfPlays } = this.props.roundData;
+    const { numberOfPlays } = this.props;
     const cards = [];
     for (let i = 0; i < numberOfPlays; i++) {
       cards.push(this.renderRevealedPlay(i));
@@ -132,7 +137,7 @@ class GameScreen extends React.Component {
 
   renderCardPlay(i, revealedIndex, cardPlay, winningPlayId, numberOfAnswers) {
     const { cardWidth, cardHeight, answersPerRow } = this.state;
-    const isWinningPlay = cardPlay.playId === winningPlayId;
+    const isWinningPlay = cardPlay.id === winningPlayId;
     const { cards } = cardPlay;
     const className = combineClasses(styles.playedCard, {
       [styles.winningCard]: isWinningPlay
@@ -166,13 +171,13 @@ class GameScreen extends React.Component {
   }
 
   renderRevealedPlay(i) {
-    const { revealedCards, numberOfPlays, winningPlayId, blackCard } = this.props.roundData;
+    const { revealedPlays, numberOfPlays, winner, blackCard } = this.props;
     const revealedIndex = numberOfPlays - 1 - i;
-
-    if (revealedIndex >= revealedCards.length) {
+    const winningPlayId = winner ? winner.id : null;
+    if (revealedIndex >= revealedPlays.length) {
       return this.renderBlankPlay(i, blackCard.numberOfAnswers);
     }
-    const cardData = revealedCards[revealedIndex];
+    const cardData = revealedPlays[revealedIndex];
     return this.renderCardPlay(
       i,
       revealedIndex,
@@ -183,10 +188,12 @@ class GameScreen extends React.Component {
   }
 
   render() {
-    const { czarOrder, roundData } = this.props;
-    const { blackCard } = roundData;
+    const { czarOrder, blackCard, winner } = this.props;
     const { hasWinningPlay, cardWidth } = this.state;
 
+    if (!blackCard) {
+      return <H4>Loading...</H4>;
+    }
     const blackCardStyle = {
       left: `calc(50% - ${cardWidth / 2}px)`,
       ...this.getCardStyle(hasWinningPlay, 0)
@@ -210,6 +217,7 @@ class GameScreen extends React.Component {
         </div>
         <div className={styles.playersList}>
           <PlayerList
+            winner={winner}
             players={czarOrder}
             width={(1 - ROUND_CONTENT_SIZE_PCT) * window.innerWidth}
             height={window.innerHeight}

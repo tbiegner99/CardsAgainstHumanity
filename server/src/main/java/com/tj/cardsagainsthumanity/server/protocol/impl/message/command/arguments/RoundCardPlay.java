@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RoundCardPlay {
-    private Integer id;
-    private List<RoundWhiteCard> cards;
+    protected Integer id;
+    protected List<RoundWhiteCard> cards;
 
     public RoundCardPlay() {
     }

@@ -3,15 +3,15 @@ package com.tj.cardsagainsthumanity.client.client;
 import com.tj.cardsagainsthumanity.client.io.InputReader;
 import com.tj.cardsagainsthumanity.client.io.OutputWriter;
 import com.tj.cardsagainsthumanity.client.io.connection.ServerConnection;
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.*;
 import com.tj.cardsagainsthumanity.client.options.factory.OptionContextFactory;
 import com.tj.cardsagainsthumanity.client.options.factory.OptionSetDriver;
 import com.tj.cardsagainsthumanity.client.options.processor.result.ProcessorResult;
 import com.tj.cardsagainsthumanity.exceptions.RuntimeInterruptException;
 import com.tj.cardsagainsthumanity.exceptions.StateNotAffectedException;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.GameStatus;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.PlayerGameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.RoundStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class ProtocolClient extends Thread implements GameStateChangeHandler {
     private InputReader inputReader;
     private OutputWriter outputWriter;
     private OptionProcessor<Option> optionProcessor;
-    private GameState gameState;
+    private GameStatus gameState;
     private ServerConnection connection;
     private OptionContextFactory optionContextFactory;
     private OptionSetDriver optionSetDriver;
@@ -45,8 +45,8 @@ public class ProtocolClient extends Thread implements GameStateChangeHandler {
     @Override
     public void run() {
 
-        gameState = GameState.initialState();
-        OptionContext initialContext = optionContextFactory.createOptionContext(connection, gameState);
+        gameState = PlayerGameStatus.empty();
+        OptionContext initialContext = optionContextFactory.createOptionContext(connection, Optional.empty(), gameState);
         setCurrentContext(initialContext);
         try {
             printWelcomeMessage();
@@ -61,7 +61,7 @@ public class ProtocolClient extends Thread implements GameStateChangeHandler {
                         continue;
                     }
                     gameState = getStateFromResult(result);
-                    OptionContext nextContext = optionContextFactory.createOptionContext(connection, gameState);
+                    OptionContext nextContext = optionContextFactory.createOptionContext(connection, currentContext.getPlayer(), gameState);
                     setCurrentContext(nextContext);
                     OptionSet nextOptions = optionSetDriver.getOptionsFromContext(getCurrentContext());
                     optionManager.resetWithOptions(nextOptions, nextContext);
@@ -96,8 +96,8 @@ public class ProtocolClient extends Thread implements GameStateChangeHandler {
         connection.connect(this);
     }
 
-    private GameState getStateFromResult(ProcessorResult processorResult) {
-        Optional<GameState> processResult = Optional.ofNullable(processorResult)
+    private GameStatus getStateFromResult(ProcessorResult processorResult) {
+        Optional<GameStatus> processResult = Optional.ofNullable(processorResult)
                 .filter(result -> result.hasStateChanged())
                 .map(result -> result.getNewState().get());
 
@@ -110,10 +110,8 @@ public class ProtocolClient extends Thread implements GameStateChangeHandler {
 
     @Override
     public void onRoundStateChanged(RoundStatus gameStatus) {
-        GameState newGameState = GameState.builder(currentContext.getGameState())
-                .setCurrentRound(gameStatus)
-                .build();
-        OptionContext nextContext = optionContextFactory.createOptionContext(connection, newGameState);
+
+        OptionContext nextContext = optionContextFactory.createOptionContext(connection, currentContext.getPlayer(), currentContext.getGameState());
         interruptWithNewContext(nextContext);
     }
 
@@ -133,8 +131,8 @@ public class ProtocolClient extends Thread implements GameStateChangeHandler {
 
     @Override
     public void onGameStateChanged(GameStatus gameStatus) {
-        GameState currentGameState = currentContext.getGameState();
-        OptionContext nextContext = optionContextFactory.createOptionContextFromGameStatus(connection, currentGameState, gameStatus);
+        GameStatus currentGameState = currentContext.getGameState();
+        OptionContext nextContext = optionContextFactory.createOptionContext(connection, currentContext.getPlayer(), gameStatus);
         interruptWithNewContext(nextContext);
     }
 }

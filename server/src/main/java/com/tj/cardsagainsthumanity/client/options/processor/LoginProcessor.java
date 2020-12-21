@@ -3,11 +3,11 @@ package com.tj.cardsagainsthumanity.client.options.processor;
 import com.tj.cardsagainsthumanity.client.io.InputReader;
 import com.tj.cardsagainsthumanity.client.io.OutputWriter;
 import com.tj.cardsagainsthumanity.client.io.connection.ServerConnection;
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.OptionContext;
 import com.tj.cardsagainsthumanity.client.options.OptionProcessor;
 import com.tj.cardsagainsthumanity.client.options.processor.result.ProcessorResult;
 import com.tj.cardsagainsthumanity.client.options.types.LoginOption;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseResponse;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.LoginCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.LoginInfo;
@@ -56,12 +56,8 @@ public class LoginProcessor implements OptionProcessor<LoginOption> {
         return response;
     }
 
-    private ProcessorResult processSuccessfulLogin(LoginResponseBody playerInfo, GameState previousState) {
-        return ProcessorResult.success(
-                GameState.builder(previousState)
-                        .setCurrentPlayer(playerInfo.getPlayerId(), playerInfo.getToken())
-                        .build()
-        );
+    private ProcessorResult processSuccessfulLogin(LoginResponseBody playerInfo, GameStatus previousState) {
+        return ProcessorResult.success(previousState);
     }
 
     private void notifyLoginStatus(int retries, Response loginResponse) {

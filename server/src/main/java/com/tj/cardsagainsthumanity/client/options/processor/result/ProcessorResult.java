@@ -1,15 +1,15 @@
 package com.tj.cardsagainsthumanity.client.options.processor.result;
 
-import com.tj.cardsagainsthumanity.client.model.GameState;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
 
 import java.util.Optional;
 
 public class ProcessorResult {
 
-    private Optional<GameState> newState;
+    private Optional<GameStatus> newState;
     private Status status;
 
-    public ProcessorResult(GameState newState, Status status) {
+    public ProcessorResult(GameStatus newState, Status status) {
         this.newState = Optional.ofNullable(newState);
         this.status = status;
     }
@@ -18,11 +18,11 @@ public class ProcessorResult {
         return new ProcessorResult(null, Status.NO_OP);
     }
 
-    public static ProcessorResult success(GameState newState) {
+    public static ProcessorResult success(GameStatus newState) {
         return new ProcessorResult(newState, Status.SUCCESS);
     }
 
-    public static ProcessorResult failure(GameState newState) {
+    public static ProcessorResult failure(GameStatus newState) {
         return new ProcessorResult(newState, Status.FAILURE);
     }
 
@@ -38,7 +38,7 @@ public class ProcessorResult {
         return newState.isPresent();
     }
 
-    public Optional<GameState> getNewState() {
+    public Optional<GameStatus> getNewState() {
         return newState;
     }
 

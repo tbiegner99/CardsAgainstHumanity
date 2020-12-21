@@ -18,10 +18,7 @@ public class DatabaseImportRequestNormalizer {
     public Collection<NormalizedPackageImport> normalize(DatabaseImportRequest request) {
         List<DatabaseCardImportRequest> whiteCards = request.getWhiteCards();
         List<DatabaseCardImportRequest> blackCards = request.getBlackCards();
-        Collection<DatabasePackageImportRequest> packages = request.getOrder().stream()
-                .map(key -> request.getDecks().get(key))
-                .filter(pack -> pack != null)
-                .collect(Collectors.toList());
+        Collection<DatabasePackageImportRequest> packages = request.getUniqueDecks().values();
 
 
         return packages.stream()
@@ -33,18 +30,19 @@ public class DatabaseImportRequestNormalizer {
         NormalizedPackageImport result = new NormalizedPackageImport();
         result.setPackageInfo(createPackageInfo(pack));
 
-        result.setWhiteCards(convertCards(pack.getWhite(), whiteCards));
-        result.setBlackCards(convertCards(pack.getBlack(), blackCards));
+        result.setWhiteCards(convertCards(pack.getWhite()));
+        result.setBlackCards(convertCards(pack.getBlack()));
         return result;
     }
 
     private CreatePackageRequest createPackageInfo(DatabasePackageImportRequest pack) {
-        return new CreatePackageRequest(pack.getName(), pack.getIcon(), CardPackage.IconType.FONTAWESOME);
+        return new CreatePackageRequest(pack.getName(), pack.getIcon(), pack.isOfficial(), CardPackage.IconType.FONTAWESOME);
     }
 
-    private List<CreateCardRequest> convertCards(List<Integer> cardIds, List<DatabaseCardImportRequest> cards) {
-        return cardIds.stream().map(index -> cards.get(index))
-                .map(card -> new CreateCardRequest(card.getText()))
+
+    private List<CreateCardRequest> convertCards(List<DatabaseCardImportRequest> cards) {
+        return cards.stream()
+                .map(card -> new CreateCardRequest(card.getText(), card.getPick(), card.getPackageId()))
                 .collect(Collectors.toList());
     }
 

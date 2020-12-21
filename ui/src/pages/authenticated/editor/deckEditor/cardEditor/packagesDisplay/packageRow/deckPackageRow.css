@@ -1,0 +1,33 @@
+.arrow {
+width:50px;
+text-align: center;
+font-size: 30px;
+cursor: pointer;
+}
+
+.packageRow {
+    display: flex;
+    align-items: center;
+    padding:10px 0;
+}
+
+.packageSelect {
+    padding-right: 5px;
+}
+
+.card {
+    padding-left:70px;
+    padding-right:50px
+}
+
+
+.cardSelect{
+    padding: 10px 20px;
+    border-width: 1px 0px 0px 0px;
+    border-color: #777;
+    border-style: solid;
+}
+.checkIcon {
+    display:flex;
+    align-items: center;
+}

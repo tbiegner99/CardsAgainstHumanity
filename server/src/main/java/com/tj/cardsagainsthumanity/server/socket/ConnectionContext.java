@@ -41,7 +41,7 @@ public class ConnectionContext implements CommandContext {
 
     @Override
     public void login(Player player) {
-        this.player = Optional.of(player);
+        this.player = Optional.ofNullable(player);
     }
 
     @Override

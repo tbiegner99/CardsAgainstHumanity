@@ -5,6 +5,8 @@ import com.tj.cardsagainsthumanity.core.game.RoundDriver;
 import com.tj.cardsagainsthumanity.core.game.events.types.GameEvent;
 import com.tj.cardsagainsthumanity.core.game.events.types.RoundEvent;
 import com.tj.cardsagainsthumanity.models.cards.WhiteCard;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
 import com.tj.cardsagainsthumanity.models.gameplay.Game;
 import com.tj.cardsagainsthumanity.models.gameplay.GameRound;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
@@ -12,9 +14,6 @@ import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseResponse;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.GameStatusCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.StartGameCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.GameRequest;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.GameStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.EmptyResponse;
 import com.tj.cardsagainsthumanity.server.protocol.io.ProtocolReader;
 import com.tj.cardsagainsthumanity.server.protocol.io.ProtocolWriter;
@@ -72,11 +71,14 @@ public class PlayerConnectionTest {
     ConnectionContext context;
 
     @Mock
+    GameStatusFactory gameStatusFactory;
+
+    @Mock
     Thread thread;
 
     @Before
     public void setUp() throws Exception {
-        PlayerConnection conn = new PlayerConnection("someName", closeHandler, reader, writer, commandProcessor);
+        PlayerConnection conn = new PlayerConnection("someName", closeHandler, reader, writer, commandProcessor, gameStatusFactory);
         connection = spy(conn);
         when(event.getGame()).thenReturn(driver);
         when(command1.getMessageId()).thenReturn("someId");
@@ -172,7 +174,7 @@ public class PlayerConnectionTest {
         doReturn(thread).when(connection).getConnectionThread();
         when(thread.isInterrupted()).thenReturn(false);
         Message ret = connection.readMessage();
-        verify(reader,times(2)).readMessage();
+        verify(reader, times(2)).readMessage();
     }
 
     @Test
@@ -221,10 +223,10 @@ public class PlayerConnectionTest {
         doReturn(Optional.of(currentPlayer)).when(context).getPlayer();
         doReturn(context).when(connection).getCurrentContext();
         doReturn(thread).when(connection).getConnectionThread();
-        GameStatus expectedStatus = GameStatus.fromGame(event.getGame(),currentPlayer);
+        GameStatus expectedStatus = gameStatusFactory.buildGameStatus(currentPlayer, event.getGame());
         GameStatusCommand expected = new GameStatusCommand(expectedStatus); // GameCommand(new GameRequest(8));
         connection.onGameStarted(event);
-        assertEquals( expected,connection.getWaitingNotifications().peek());
+        assertEquals(expected, connection.getWaitingNotifications().peek());
         verify(thread, times(1)).interrupt();
     }
 
@@ -235,10 +237,10 @@ public class PlayerConnectionTest {
         doReturn(context).when(connection).getCurrentContext();
         doReturn(thread).when(connection).getConnectionThread();
         doReturn(true).when(currentPlayer).isCzarFor(round);
-        GameStatus expectedStatus = GameStatus.fromGame(event.getGame(),currentPlayer);
+        GameStatus expectedStatus = gameStatusFactory.buildGameStatus(currentPlayer, event.getGame());
         GameStatusCommand expected = new GameStatusCommand(expectedStatus); // GameCommand(new GameRequest(8));
         connection.onRoundStart(roundEvent);
-        assertEquals( expected,connection.getWaitingNotifications().peek());
+        assertEquals(expected, connection.getWaitingNotifications().peek());
         verify(thread, times(1)).interrupt();
     }
 
@@ -249,10 +251,10 @@ public class PlayerConnectionTest {
         doReturn(context).when(connection).getCurrentContext();
         doReturn(thread).when(connection).getConnectionThread();
         doReturn(true).when(currentPlayer).isCzarFor(round);
-        GameStatus expectedStatus = GameStatus.fromGame(event.getGame(),currentPlayer);
+        GameStatus expectedStatus = gameStatusFactory.buildGameStatus(currentPlayer, event.getGame());
         GameStatusCommand expected = new GameStatusCommand(expectedStatus); // GameCommand(new GameRequest(8));
         connection.onRoundChangeEvent(roundEvent);
-        assertEquals( expected,connection.getWaitingNotifications().peek());
+        assertEquals(expected, connection.getWaitingNotifications().peek());
         verify(thread, times(1)).interrupt();
     }
 

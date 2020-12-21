@@ -14,11 +14,14 @@ module.exports = {
   devServer: {
     hot: true,
     port: 8000,
+    host: '0.0.0.0',
+    disableHostCheck: true,
     historyApiFallback: true,
     proxy: {
       '/cah': 'http://localhost:8080',
       '/cah/socket/playerConnection': {
         target: 'ws://localhost:8080',
+
         ws: true
       }
     }

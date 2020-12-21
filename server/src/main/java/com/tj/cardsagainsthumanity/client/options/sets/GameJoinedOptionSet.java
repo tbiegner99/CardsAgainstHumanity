@@ -1,6 +1,5 @@
 package com.tj.cardsagainsthumanity.client.options.sets;
 
-import com.tj.cardsagainsthumanity.client.model.GameState;
 import com.tj.cardsagainsthumanity.client.options.Option;
 import com.tj.cardsagainsthumanity.client.options.OptionContext;
 import com.tj.cardsagainsthumanity.client.options.types.gameManagement.ChangeGameManagerOption;
@@ -19,8 +18,7 @@ public class GameJoinedOptionSet extends BaseOptionSet {
 
     @Override
     public String getPrompt(OptionContext context) {
-        GameState currentState = context.getGameState();
-        if (!currentState.isPlayerGameManager()) {
+        if (!context.isPlayerGameManager()) {
             return "\n\nWaiting for game to start....\n\n";
         }
         return super.getPrompt(context);
@@ -28,8 +26,7 @@ public class GameJoinedOptionSet extends BaseOptionSet {
 
     @Override
     public Option[] getOptions(OptionContext context) {
-        GameState currentState = context.getGameState();
-        if (!currentState.isPlayerGameManager()) {
+        if (!context.isPlayerGameManager()) {
             return new Option[0];
         }
         return super.getOptions(context);

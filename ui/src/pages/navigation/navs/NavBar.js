@@ -22,7 +22,7 @@ const NavBar = (props) => (
   <HeaderNavBar>
     {renderUserMenu(props)}
 
-    <Branding />
+    <Branding onClick={props.onBrandClick} />
     <div />
   </HeaderNavBar>
 );

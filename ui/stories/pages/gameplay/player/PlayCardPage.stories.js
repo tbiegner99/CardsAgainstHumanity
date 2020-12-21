@@ -2,7 +2,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs } from '@storybook/addon-knobs';
-import PlayCardPage from '../../../../src/pages/authenticated/gameplay/player/playCard/PlayCardPage';
+import PlayCardPage from '../../../../src/pages/authenticated/gameplay/roundPlay/playCard/PlayCardPage';
 
 const blackCard = {
   numberOfAnswers: 1,

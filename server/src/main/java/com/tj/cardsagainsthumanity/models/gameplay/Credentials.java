@@ -3,10 +3,11 @@ package com.tj.cardsagainsthumanity.models.gameplay;
 import com.tj.cardsagainsthumanity.models.AuditedEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "credentials")
-public class Credentials extends AuditedEntity {
+public class Credentials extends AuditedEntity implements Serializable {
     @Id
     @Column(name = "user_id")
     private Integer playerId;

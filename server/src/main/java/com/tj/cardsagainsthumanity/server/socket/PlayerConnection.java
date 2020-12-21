@@ -8,11 +8,12 @@ import com.tj.cardsagainsthumanity.core.game.events.handler.RoundStartedEventHan
 import com.tj.cardsagainsthumanity.core.game.events.handler.RoundStateChangeEventHandler;
 import com.tj.cardsagainsthumanity.core.game.events.types.GameEvent;
 import com.tj.cardsagainsthumanity.core.game.events.types.RoundEvent;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatus;
+import com.tj.cardsagainsthumanity.models.gameStatus.GameStatusFactory;
 import com.tj.cardsagainsthumanity.models.gameplay.GameRound;
 import com.tj.cardsagainsthumanity.models.gameplay.Player;
 import com.tj.cardsagainsthumanity.server.protocol.CommandProcessor;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.GameStatusCommand;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.GameStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.EmptyResponse;
 import com.tj.cardsagainsthumanity.server.protocol.io.ProtocolReader;
 import com.tj.cardsagainsthumanity.server.protocol.io.ProtocolWriter;
@@ -32,18 +33,20 @@ public class PlayerConnection implements Runnable, RoundStateChangeEventHandler,
     private final ProtocolWriter protocolWriter;
     private final ConnectionCloseHandler closeHandler;
     private final String connectionName;
+    private final GameStatusFactory gameStatusFactory;
     private Thread thread;
     private Queue<Command> waitingNotifications;
     private boolean connectionAlive = true;
     private ConnectionContext context;
 
-    public PlayerConnection(String connectionName, ConnectionCloseHandler closeHandler, ProtocolReader reader, ProtocolWriter writer, CommandProcessor<Command, Response> commandProcessor) {
+    public PlayerConnection(String connectionName, ConnectionCloseHandler closeHandler, ProtocolReader reader, ProtocolWriter writer, CommandProcessor<Command, Response> commandProcessor, GameStatusFactory gameStatusFactory) {
         this.protocolReader = reader;
         this.protocolWriter = writer;
         this.commandProcessor = commandProcessor;
         this.closeHandler = closeHandler;
         this.waitingNotifications = new LinkedList<>();
         this.connectionName = connectionName;
+        this.gameStatusFactory = gameStatusFactory;
 
     }
 
@@ -71,7 +74,8 @@ public class PlayerConnection implements Runnable, RoundStateChangeEventHandler,
             Command nextCommand = waitingNotifications.poll();
             try {
                 protocolWriter.sendCommand(nextCommand);
-            } catch (IOException e){}
+            } catch (IOException e) {
+            }
         }
     }
 
@@ -136,7 +140,8 @@ public class PlayerConnection implements Runnable, RoundStateChangeEventHandler,
             e.printStackTrace();
             try {
                 protocolWriter.sendResponse(generateErrorResponse(e, message));
-            }catch(IOException ex){}
+            } catch (IOException ex) {
+            }
         }
     }
 
@@ -168,7 +173,7 @@ public class PlayerConnection implements Runnable, RoundStateChangeEventHandler,
 
     private GameStatusCommand createGameStatusCommand(GameDriver game) {
         Player currentPlayer = getCurrentContext().getPlayer().orElseThrow(() -> new IllegalStateException("Game status cannot be retrieved without current player"));
-        GameStatus request = GameStatus.fromGame(game, currentPlayer);
+        GameStatus request = gameStatusFactory.buildGameStatus(currentPlayer, game);
         return new GameStatusCommand(request);
     }
 
@@ -178,6 +183,13 @@ public class PlayerConnection implements Runnable, RoundStateChangeEventHandler,
         game.registerGameStartedHandler(this);
         game.registerRoundStateChangeHandler(this);
         game.registerRoundStartedHandler(this);
+    }
+
+    @Override
+    public void onGameLeft(GameDriver game) {
+        game.unregisterGameStartedHandler(this);
+        game.unregisterRoundStateChangeHandler(this);
+        game.unregisterRoundStartedHandler(this);
     }
 
     @Override

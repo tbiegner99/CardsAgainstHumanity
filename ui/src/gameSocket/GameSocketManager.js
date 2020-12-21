@@ -1,6 +1,6 @@
 import GameSocket from './GameSocket';
 
-const CONNECTION_URL = 'ws://localhost:8000/cah/socket/playerConnection';
+const CONNECTION_URL = `ws://${window.location.host}/cah/socket/playerConnection`;
 
 class GameSocketManager {
   static gameSocket = null;

@@ -11,8 +11,8 @@ public abstract class CommonCard extends AuditedEntity implements Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_id")
     private Integer id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "package_id")
+    @ManyToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "package_id", nullable = false)
     private CardPackage cardPackage;
     @Column(name = "card_text")
     private String cardText;
@@ -22,8 +22,8 @@ public abstract class CommonCard extends AuditedEntity implements Card {
     }
 
     public CommonCard(CardPackage cardPackage, String cardText) {
-        setPackage(cardPackage);
-        setCardText(cardText);
+        setCardPackage(cardPackage);
+        setText(cardText);
     }
 
     @Override
@@ -41,12 +41,12 @@ public abstract class CommonCard extends AuditedEntity implements Card {
     }
 
     @Override
-    public CardPackage getPackage() {
+    public CardPackage getCardPackage() {
         return cardPackage;
     }
 
     @Override
-    public void setPackage(CardPackage cardPackage) {
+    public void setCardPackage(CardPackage cardPackage) {
         this.cardPackage = cardPackage;
     }
 
@@ -55,7 +55,8 @@ public abstract class CommonCard extends AuditedEntity implements Card {
         return cardText;
     }
 
-    public void setCardText(String cardText) {
+    @Override
+    public void setText(String cardText) {
         this.cardText = cardText;
     }
 
@@ -72,7 +73,7 @@ public abstract class CommonCard extends AuditedEntity implements Card {
     @Override
     public boolean equals(Object o) {
         CommonCard that = (CommonCard) o;
-        return Objects.equals(cardPackage, that.cardPackage) &&
+        return Objects.equals(getId(), that.getId()) &&
                 Objects.equals(cardText, that.cardText);
     }
 }

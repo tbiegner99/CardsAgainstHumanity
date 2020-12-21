@@ -14,4 +14,9 @@ public class LoginCommand extends BaseCommand<LoginInfo> {
         super(ProtocolCommandName.LOGIN, info);
     }
 
+    @Override
+    public boolean isLoginRequired() {
+        return false;
+    }
+
 }

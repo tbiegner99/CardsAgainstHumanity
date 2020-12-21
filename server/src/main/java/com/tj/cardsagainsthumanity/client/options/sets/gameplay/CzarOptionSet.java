@@ -6,8 +6,8 @@ import com.tj.cardsagainsthumanity.client.options.sets.BaseOptionSet;
 import com.tj.cardsagainsthumanity.client.options.types.gameplay.JudgeOption;
 import com.tj.cardsagainsthumanity.client.options.types.gameplay.ShowHandOption;
 import com.tj.cardsagainsthumanity.client.options.types.gameplay.ViewScoresOption;
+import com.tj.cardsagainsthumanity.models.gameStatus.RoundStatus;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundBlackCard;
-import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.RoundStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class CzarOptionSet extends BaseOptionSet {
 
     @Override
     public String getPrompt(OptionContext context) {
-        return roundStateToString(context.getGameState().getCurrentRound().get());
+        return roundStateToString(context.getGameState().getRound());
     }
 
 
@@ -39,13 +39,13 @@ public class CzarOptionSet extends BaseOptionSet {
         if (currentRound.isAllCardsIn()) {
             return "All cards played";
         }
-        return String.format("%d cards played", currentRound.getCardsInPlay().size());
+        return String.format("%d cards played", currentRound.getRevealedPlays().size());
     }
 
     private String printCzar(RoundStatus currentRound) {
         if (currentRound.isCzarIsYou()) {
             return "You are the czar";
         }
-        return currentRound.getCzar();
+        return currentRound.getCzar().getDisplayName();
     }
 }
