@@ -9,7 +9,7 @@ module.exports = {
     filename: '[name].bundle.js',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'build'),
-    publicPath: '/cah'
+    publicPath: '/cah/'
   },
   devServer: {
     hot: true,

@@ -20,7 +20,6 @@ services:
     build: ./server
     restart: always
     container_name: cah
-    tty: true
   router:
     image: nginx
     restart: always

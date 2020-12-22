@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
+import Redirect from '../../components/Redirect';
 import Home from './Home';
 import JoinGame from './joinGame/ReduxJoinGame';
 import PlayGame from './gameplay/ReduxPlayGame';
@@ -44,7 +45,7 @@ class AuthenticatedPage extends React.Component {
           {authenticated ? (
             this.renderAuthenticatedRoutes(props)
           ) : (
-            <Redirect to={`/login?redirectUrl=${redirectLocation}`} />
+            <Redirect to={`${Urls.LOGIN}?redirectUrl=${redirectLocation}`} />
           )}
         </Route>
       </Switch>

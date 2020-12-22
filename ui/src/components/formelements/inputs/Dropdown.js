@@ -3,7 +3,6 @@ import FormsSelect from 'reactforms/src/form/elements/Select';
 import Option from 'reactforms/src/form/elements/Option';
 
 import combineClasses from 'classnames';
-import styles from './dropdown.css';
 
 const createWithClass = (InputClass, ...cssClasses) => (props) => {
   const { className, children, ...otherProps } = props;
@@ -16,8 +15,8 @@ const createWithClass = (InputClass, ...cssClasses) => (props) => {
 };
 
 const createInputWithClass = (InputClass, ...cssClasses) =>
-  createWithClass(InputClass, styles.input, ...cssClasses);
+  createWithClass(InputClass, ...cssClasses);
 
-const Dropdown = createInputWithClass(styles.select);
+const Dropdown = createInputWithClass();
 
 export { Dropdown, Option };

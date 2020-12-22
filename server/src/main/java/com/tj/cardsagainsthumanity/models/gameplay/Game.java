@@ -39,6 +39,7 @@ public class Game extends AuditedEntity {
     public Game() {
         playerHands = new HashMap<>();
         scoreboard = new Scoreboard();
+        cardsInPlay = new HashSet<>();
     }
 
     public Integer getId() {
@@ -103,6 +104,7 @@ public class Game extends AuditedEntity {
     }
 
     public Set<PlayerHandCard> getCardsInPlay() {
+
         return cardsInPlay;
     }
 

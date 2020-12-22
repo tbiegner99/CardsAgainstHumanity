@@ -1,11 +1,12 @@
 import React from 'react';
+import Redirect from '../../components/Redirect';
 import LoginForm from './LoginForm';
 import styles from './loginPage.css';
-import { Redirect } from 'react-router-dom';
+import Urls from '../../utils/Urls';
 
 const renderLoginForm = (props) => {
   if (props.authenticated && props.loaded) {
-    return <Redirect to="/auth" />;
+    return <Redirect to={Urls.AUTHENTICATED} />;
   }
   return <LoginForm {...props} />;
 };

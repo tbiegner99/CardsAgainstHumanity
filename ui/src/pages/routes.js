@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Redirect from '../components/Redirect';
 import UrlActionCreator from '../actionCreators/UrlActionCreator';
 import NavBar from './navigation/navs/NavBar';
 import LoginPage from './login/ReduxLoginPage';
@@ -38,8 +39,8 @@ class Routing extends React.Component {
             <Route exact path={Urls.Audience.HOME} component={AudiencePage} />
             <Route exact path={Urls.Audience.JOIN} component={AudienceJoinPage} />
             <Route exact path={Urls.Audience.GAME} component={AudienceGameScreen} />
-            <Route path="/auth" component={AuthenticatedPage} />
-            <Route path="/">
+            <Route path={Urls.AUTHENTICATED} component={AuthenticatedPage} />
+            <Route path="*">
               <Redirect to={Urls.LOGIN} />
             </Route>
           </Switch>

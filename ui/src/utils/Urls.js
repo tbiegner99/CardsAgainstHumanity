@@ -1,5 +1,3 @@
-const HOME = '/auth/home';
-
 const parameterize = (url, params) => {
   let replacedUrl = url;
   Object.entries(params).forEach(([key, value]) => {
@@ -9,28 +7,33 @@ const parameterize = (url, params) => {
   return replacedUrl;
 };
 
+const CONTEXT_ROOT = '/cah';
+const fullUrl = (url) => `${CONTEXT_ROOT}${url}`;
+const HOME = fullUrl('/auth/home');
+
 export default {
-  PLAY_GAME: '/auth/play/:gameId',
-  SCOREBOARD: '/auth/play/:gameId/scoreboard',
-  CZAR_ORDER: '/auth/play/:gameId/czarOrder',
-  MY_HAND: '/auth/play/:gameId/hand',
+  PLAY_GAME: fullUrl('/auth/play/:gameId'),
+  SCOREBOARD: fullUrl('/auth/play/:gameId/scoreboard'),
+  CZAR_ORDER: fullUrl('/auth/play/:gameId/czarOrder'),
+  MY_HAND: fullUrl('/auth/play/:gameId/hand'),
   POST_LOGIN_URL: HOME,
+  AUTHENTICATED: fullUrl('/auth'),
   HOME,
-  LOGIN: '/login',
-  REGISTER: '/register',
-  LOGOUT: '/logout',
-  NEW_GAME: '/auth/game',
-  JOIN_GAME: '/auth/join',
-  DESIGN: '/auth/design',
-  DESIGN_PACKAGES: '/auth/design/packages',
-  EDIT_PACKAGE: '/auth/design/package/:packageId',
-  DESIGN_DECK: '/auth/design/deck',
-  EDIT_DECK: '/auth/design/deck/:deckId',
-  STATS: '/auth/stats',
+  LOGIN: fullUrl('/login'),
+  REGISTER: fullUrl('/register'),
+  LOGOUT: fullUrl('/logout'),
+  NEW_GAME: fullUrl('/auth/game'),
+  JOIN_GAME: fullUrl('/auth/join'),
+  DESIGN: fullUrl('/auth/design'),
+  DESIGN_PACKAGES: fullUrl('/auth/design/packages'),
+  EDIT_PACKAGE: fullUrl('/auth/design/package/:packageId'),
+  DESIGN_DECK: fullUrl('/auth/design/deck'),
+  EDIT_DECK: fullUrl('/auth/design/deck/:deckId'),
+  STATS: fullUrl('/auth/stats'),
   Audience: {
-    HOME: '/audience',
-    JOIN: '/audience/join',
-    GAME: '/audience/view/:gameId'
+    HOME: fullUrl('/audience'),
+    JOIN: fullUrl('/audience/join'),
+    GAME: fullUrl('/audience/view/:gameId')
   },
 
   parameterize

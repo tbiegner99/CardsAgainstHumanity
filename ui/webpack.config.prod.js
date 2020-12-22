@@ -3,7 +3,6 @@ const MiniCssExtractTextPlugin = require('mini-css-extract-plugin');
 
 module.exports = Object.assign({}, base, {
   watch: false,
-  devtool: 'none',
   plugins: base.plugins.concat([
     new MiniCssExtractTextPlugin({
       filename: '[name].[chunkhash].css'

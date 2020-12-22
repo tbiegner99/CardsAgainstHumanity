@@ -64,10 +64,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private void joinCurrentGame(Player currentPlayer, WebSocketSession session, WebSocketConnection connection) {
         Object currentGame = session.getAttributes().get("currentGame");
         if (currentGame != null) {
-            GameDriver game = gameDriverDao.getGameByCode(currentGame.toString());
-            connection.getConnectionContext().setGameHandler(connection);
-            connection.getConnectionContext().joinGame(game);
+            try {
+                GameDriver game = gameDriverDao.getGameByCode(currentGame.toString());
+                connection.getConnectionContext().setGameHandler(connection);
+                connection.getConnectionContext().joinGame(game);
+            } catch (Exception e) {
 
+            }
         }
     }
 

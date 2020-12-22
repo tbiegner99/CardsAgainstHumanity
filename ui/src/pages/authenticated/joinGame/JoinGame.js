@@ -1,9 +1,8 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import ErrorLabel from 'reactforms/src/form/elements/ErrorLabel';
 import Form from 'reactforms/src/form/Form';
+import Redirect from '../../../components/Redirect';
 import { PrimaryButton } from '../../../components/formelements/buttons/Buttons';
-import styles from './joinGame.css';
 import { TextInput } from '../../../components/formelements/inputs/TextInput';
 import PlayerDisplay from '../../../components/PlayerDisplay';
 import Urls from '../../../utils/Urls';
@@ -19,7 +18,7 @@ const renderCode = (props) => {
         Joined Game: <span data-id="game-id">{gameId}</span>
       </h3>
       <h2>Waiting for game to start</h2>
-      <PlayerDisplay players={players} className={styles.playerDisplay} />
+      <PlayerDisplay players={players} />
     </div>
   );
 };
