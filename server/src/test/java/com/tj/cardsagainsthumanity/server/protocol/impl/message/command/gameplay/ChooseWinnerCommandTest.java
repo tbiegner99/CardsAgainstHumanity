@@ -5,12 +5,14 @@ import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.argument
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.message.Message;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class ChooseWinnerCommandTest {
     @Before
     public void setUp() throws Exception {

@@ -1,6 +1,6 @@
 import React from 'react';
 import CardDisplay from './CardDisplay';
-import { EditIcon, DeleteIcon } from '../../../../../../components/Icons/icons';
+import { EditIcon, DeleteIcon } from '../../../../../../../components/Icons/icons';
 
 import styles from './CardRow.css';
 

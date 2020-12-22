@@ -13,6 +13,7 @@ import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.GameRes
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.response.RoundStatusResponse;
 import com.tj.cardsagainsthumanity.server.protocol.message.CommandContext;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ChooseWinnerProcessorTest {
 

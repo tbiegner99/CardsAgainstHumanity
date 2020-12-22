@@ -8,6 +8,7 @@ import com.tj.cardsagainsthumanity.serializer.requestModel.cardPackage.CreatePac
 import com.tj.cardsagainsthumanity.serializer.requestModel.dbImport.DatabaseImportRequest;
 import com.tj.cardsagainsthumanity.serializer.requestModel.packageImport.NormalizedPackageImport;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,6 +26,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class DatabaseImportRequestNormalizerTest {
 

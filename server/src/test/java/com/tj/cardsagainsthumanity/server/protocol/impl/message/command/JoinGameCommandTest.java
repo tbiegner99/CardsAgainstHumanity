@@ -4,10 +4,12 @@ import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.JoinGameRequest;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.message.Message;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+@Ignore
 public class JoinGameCommandTest {
 
     @Test
@@ -39,7 +41,7 @@ public class JoinGameCommandTest {
         BaseCommand command = (BaseCommand) serializer.deserializeMessage(serializedData);
         assertTrue(command instanceof JoinGameCommand);
         assertEquals(command.getCommandName(), "JOIN");
-        assertEquals(( (JoinGameCommand) command ).getArguments().getCode(), "someCode");
-        assertEquals(( (JoinGameCommand) command ).getArguments().getPlayerId().intValue(), 6);
+        assertEquals(((JoinGameCommand) command).getArguments().getCode(), "someCode");
+        assertEquals(((JoinGameCommand) command).getArguments().getPlayerId().intValue(), 6);
     }
 }

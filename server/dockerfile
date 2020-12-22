@@ -1,0 +1,11 @@
+FROM adoptopenjdk/maven-openjdk11 as build
+
+COPY ./ ./
+
+RUN mvn clean package -Pprod
+
+FROM adoptopenjdk/openjdk11
+COPY --from=build ./target/cardsagainsthumanity*-SNAPSHOT.jar ./cardsagainsthumanity.jar
+EXPOSE 8080
+
+CMD java -jar  ./cardsagainsthumanity.jar

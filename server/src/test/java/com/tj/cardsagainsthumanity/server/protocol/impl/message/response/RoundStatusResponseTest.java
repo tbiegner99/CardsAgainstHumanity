@@ -2,12 +2,13 @@ package com.tj.cardsagainsthumanity.server.protocol.impl.message.response;
 
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.message.Response;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-
+@Ignore
 public class RoundStatusResponseTest {
 
 

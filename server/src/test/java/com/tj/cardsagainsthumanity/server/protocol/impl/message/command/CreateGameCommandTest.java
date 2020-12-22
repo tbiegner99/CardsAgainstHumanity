@@ -4,10 +4,12 @@ import com.tj.cardsagainsthumanity.server.protocol.impl.message.BaseCommand;
 import com.tj.cardsagainsthumanity.server.protocol.impl.message.command.arguments.CreateGameRequest;
 import com.tj.cardsagainsthumanity.server.protocol.io.impl.JSONSerializer;
 import com.tj.cardsagainsthumanity.server.protocol.message.Message;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+@Ignore
 public class CreateGameCommandTest {
 
 

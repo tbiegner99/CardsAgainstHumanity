@@ -12,6 +12,7 @@ import com.tj.cardsagainsthumanity.serializer.requestModel.packageImport.Normali
 import com.tj.cardsagainsthumanity.serializer.responseModel.cardPackage.PackageResponse;
 import com.tj.cardsagainsthumanity.services.CardPackageService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class PackageControllerTest {
 

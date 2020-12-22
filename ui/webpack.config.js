@@ -9,7 +9,7 @@ module.exports = {
     filename: '[name].bundle.js',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'build'),
-    publicPath: '/'
+    publicPath: '/cah'
   },
   devServer: {
     hot: true,
@@ -18,8 +18,8 @@ module.exports = {
     disableHostCheck: true,
     historyApiFallback: true,
     proxy: {
-      '/cah': 'http://localhost:8080',
-      '/cah/socket/playerConnection': {
+      '/api/cah': 'http://localhost:8080',
+      '/api/cah/socket/playerConnection': {
         target: 'ws://localhost:8080',
 
         ws: true

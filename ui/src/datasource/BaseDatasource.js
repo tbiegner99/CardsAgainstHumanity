@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = '/cah';
+const BASE_URL = '/api/cah';
 
 class BaseDatasource {
   constructor(config) {

@@ -11,6 +11,7 @@ import com.tj.cardsagainsthumanity.server.protocol.message.CommandContext;
 import com.tj.cardsagainsthumanity.services.gameplay.GameService;
 import com.tj.cardsagainsthumanity.services.gameplay.PlayerService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class CreateGameCommandProcessorTest {
     CreateGameCommandProcessor processor;
