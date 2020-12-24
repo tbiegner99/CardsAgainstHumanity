@@ -20,6 +20,9 @@ services:
     build: ./server
     restart: always
     container_name: cah
+    depends_on:
+      - redis
+      - db
   router:
     image: nginx
     restart: always
