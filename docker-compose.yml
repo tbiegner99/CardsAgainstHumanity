@@ -24,7 +24,7 @@ services:
       - redis
       - db
   router:
-    image: nginx
+    image: ./ui
     restart: always
     container_name: router
     volumes:
