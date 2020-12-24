@@ -5,9 +5,13 @@ const CONNECTION_URL = `ws://${window.location.host}/api/cah/socket/playerConnec
 class GameSocketManager {
   static gameSocket = null;
 
+  static newGameSocket() {
+    this.gameSocket = new GameSocket(CONNECTION_URL);
+  }
+
   static getGameSocket() {
     if (!this.gameSocket) {
-      this.gameSocket = new GameSocket(CONNECTION_URL);
+      GameSocketManager.newGameSocket();
     }
     return this.gameSocket;
   }

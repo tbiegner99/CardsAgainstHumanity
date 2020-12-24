@@ -1,8 +1,15 @@
+const path = require('path');
 const base = require('./webpack.config');
 const MiniCssExtractTextPlugin = require('mini-css-extract-plugin');
 
 module.exports = Object.assign({}, base, {
   watch: false,
+  output: {
+    filename: '[name].bundle.js',
+    libraryTarget: 'umd',
+    path: path.resolve(__dirname, 'build'),
+    publicPath: '/cah/'
+  },
   plugins: base.plugins.concat([
     new MiniCssExtractTextPlugin({
       filename: '[name].[chunkhash].css'

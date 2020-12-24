@@ -4,12 +4,15 @@ import com.tj.cardsagainsthumanity.core.game.events.handler.*;
 import com.tj.cardsagainsthumanity.core.game.events.types.GameEvent;
 import com.tj.cardsagainsthumanity.core.game.events.types.PlayerEvent;
 import com.tj.cardsagainsthumanity.core.game.events.types.RoundEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class NormalGameEventManager implements GameEventManager {
+    Logger logger = LoggerFactory.getLogger(GameEventManager.class);
     private List<GameStartedEventHandler> gameStartedEventHandlerList;
     private List<GameOverEventHandler> gameOverEventHandlerList;
     private List<GameStateChangeEventHandler> gameStateChangeEventHandlerList;
@@ -105,6 +108,7 @@ public class NormalGameEventManager implements GameEventManager {
     }
 
     private void logException(Exception e) {
+        logger.error("Error processing event", e);
     }
 
     @Override

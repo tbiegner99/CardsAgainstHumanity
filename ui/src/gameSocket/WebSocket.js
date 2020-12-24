@@ -50,7 +50,7 @@ class WebSocketManager {
   }
 
   get isConnected() {
-    return this.connected;
+    return this.socket && this.socket.readyState === 1;
   }
 
   get deserializer() {

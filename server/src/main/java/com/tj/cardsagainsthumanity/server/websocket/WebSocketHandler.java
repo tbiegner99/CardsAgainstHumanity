@@ -40,6 +40,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        WebSocketConnection connection = connectionManager.getConnection(session.getId());
+        if (connection != null) {
+            connection.closeConnection();
+        }
         connectionManager.removeConnection(session.getId());
     }
 

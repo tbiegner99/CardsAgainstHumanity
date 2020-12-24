@@ -15,6 +15,7 @@ import com.tj.cardsagainsthumanity.server.protocol.message.Response;
 import com.tj.cardsagainsthumanity.server.socket.ConnectionContext;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public abstract class AbstractConnection implements RoundStateChangeEventHandler, PlayerStateChangeHandler, RoundStartedEventHandler, GameJoinedHandler, GameStartedEventHandler, GameStateChangeEventHandler {
     private final CommandProcessor<Command, Response> commandProcessor;
@@ -80,13 +81,13 @@ public abstract class AbstractConnection implements RoundStateChangeEventHandler
 
 
     protected GameStatusCommand createGameStatusCommand(GameDriver game) {
-        Player currentPlayer = getCurrentPlayer();
+        Player currentPlayer = getCurrentPlayer().orElse(null);
         GameStatus request = statusFactory.buildGameStatus(currentPlayer, game);
         return new GameStatusCommand(request);
     }
 
-    protected Player getCurrentPlayer() {
-        return getConnectionContext().getPlayer().orElseThrow(() -> new IllegalStateException("Game status cannot be retrieved without current player"));
+    protected Optional<Player> getCurrentPlayer() {
+        return getConnectionContext().getPlayer();
     }
 
     protected void sendGameStatus(GameDriver game) {
