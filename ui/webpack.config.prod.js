@@ -23,6 +23,10 @@ module.exports = Object.assign({}, base, {
         use: ['babel-loader']
       },
       {
+        test: /node_modules\/reactforms\/.*\.(js)$/,
+        use: ['babel-loader']
+      },
+      {
         test: /\.(png|jpe?g|svg|gif|eot|woff2?|ttf)$/i,
         use: [
           {

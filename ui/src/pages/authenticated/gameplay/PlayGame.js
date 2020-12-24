@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
+import Redirect from '../../../components/Redirect';
 import RoundPlay from './roundPlay/ReduxRoundPlay';
 import Urls from '../../../utils/Urls';
 import Scoreboard from './scoreboard/Scoreboard';

@@ -1,11 +1,15 @@
 FROM node:14 as build
 
-COPY ./src ./
-COPY ./lib ./
+
 COPY ./package-lock.json ./
 COPY ./package.json ./
-
 RUN npm ci
+
+COPY ./src ./src
+COPY ./lib ./lib
+COPY ./babel.config.js ./
+COPY ./webpack.config.js ./
+COPY ./webpack.config.prod.js ./
 RUN npm run build
 
 FROM nginx
