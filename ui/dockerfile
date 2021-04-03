@@ -13,6 +13,7 @@ COPY ./webpack.config.prod.js ./
 RUN npm run build
 
 FROM nginx
+RUN apt-get update
 COPY --from=build ./build /srv/package/cah
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80

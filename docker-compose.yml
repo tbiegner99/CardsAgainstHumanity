@@ -23,6 +23,11 @@ services:
     depends_on:
       - redis
       - db
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./ui/nginx/data/certbot/conf:/etc/letsencrypt
+      - ./ui/nginx/data/certbot/www:/var/www/certbot
   router:
     build: ./ui
     restart: always
@@ -30,6 +35,9 @@ services:
     volumes:
       - ./ui/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./ui/build:/srv/package/cah
+      - ./ui/nginx/data/certbot/conf:/etc/letsencrypt
+      - ./ui/nginx/data/certbot/www:/var/www/certbot
     ports:
       - 80:80
+      - 443:443
     user: root
