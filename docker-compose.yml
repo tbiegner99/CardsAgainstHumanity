@@ -28,6 +28,7 @@ services:
     volumes:
       - ./ui/nginx/data/certbot/conf:/etc/letsencrypt
       - ./ui/nginx/data/certbot/www:/var/www/certbot
+      - ./ui/nginx/certs:/etc/letsencrypt/live
   router:
     build: ./ui
     restart: always
@@ -35,6 +36,7 @@ services:
     volumes:
       - ./ui/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./ui/build:/srv/package/cah
+      - ./ui/nginx/certs:/etc/letsencrypt/live
       - ./ui/nginx/data/certbot/conf:/etc/letsencrypt
       - ./ui/nginx/data/certbot/www:/var/www/certbot
     ports:
