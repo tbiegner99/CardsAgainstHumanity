@@ -13,4 +13,9 @@ public class GameStatusCommand extends BaseCommand<GameStatus> {
     public GameStatusCommand(GameStatus body) {
         super(ProtocolCommandName.GAME_STATUS, body);
     }
+
+    @Override
+    public boolean isLoginRequired() {
+        return false;
+    }
 }

@@ -27,9 +27,12 @@ public class GenericCommandProcessor implements CommandProcessor<Command, Respon
     private LoadGameProcessor loadGameProcessor;
     private RevealPlayProcessor revealPlayProcessor;
     private EndRoundProcessor endRoundProcessor;
+    private GameStatusProcessor gameStatusProcessor;
 
     @Autowired
-    public GenericCommandProcessor(StartGameCommandProcessor startGameCommandProcessor, LoginCommandProcessor loginCommandProcessor, CreateGameCommandProcessor createGameProcessor, JoinGameCommandProcessor joinGameCommandProcessor, PlayCardCommandProcessor playCardCommandProcessor, ChooseWinnerProcessor chooseWinnerProcessor, LoadGameProcessor loadGameProcessor, RevealPlayProcessor revealPlayProcessor, EndRoundProcessor endRoundProcessor) {
+
+    public GenericCommandProcessor(GameStatusProcessor statusProcessor, StartGameCommandProcessor startGameCommandProcessor, LoginCommandProcessor loginCommandProcessor, CreateGameCommandProcessor createGameProcessor, JoinGameCommandProcessor joinGameCommandProcessor, PlayCardCommandProcessor playCardCommandProcessor, ChooseWinnerProcessor chooseWinnerProcessor, LoadGameProcessor loadGameProcessor, RevealPlayProcessor revealPlayProcessor, EndRoundProcessor endRoundProcessor) {
+        this.gameStatusProcessor = statusProcessor;
         this.createGameProcessor = createGameProcessor;
         this.joinGameCommandProcessor = joinGameCommandProcessor;
         this.playCardProcessor = playCardCommandProcessor;
@@ -81,6 +84,7 @@ public class GenericCommandProcessor implements CommandProcessor<Command, Respon
                 case END_ROUND:
                     return endRoundProcessor.processMessage((EndRoundCommand) messageToProcess, context);
                 case GAME_STATUS:
+                    return gameStatusProcessor.processMessage((GameStatusCommand) messageToProcess, context);
                 case LEAVE:
                 case LIKE:
                 case DISLIKE:

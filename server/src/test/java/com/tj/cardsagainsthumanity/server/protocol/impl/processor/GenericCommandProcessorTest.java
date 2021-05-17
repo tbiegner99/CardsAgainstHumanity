@@ -53,9 +53,14 @@ public class GenericCommandProcessorTest {
     @Mock
     RevealPlayProcessor revealPlayProcessor;
     RevealPlayCommand revealPlayCommand = new RevealPlayCommand();
+
     @Mock
     EndRoundProcessor endRoundProcessor;
     EndRoundCommand endRoundCommand = new EndRoundCommand();
+
+    @Mock
+    GameStatusProcessor gameStatusProcessor;
+    GameStatusCommand gameStatusCommand = new GameStatusCommand();
 
     @Mock
     CommandContext context;
@@ -69,7 +74,7 @@ public class GenericCommandProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        processor = new GenericCommandProcessor(startGameCommandProcessor, loginCommandProcessor, createGameCommandProcessor, joinGameCommandProcessor, playCardCommandProcessor, chooseWinnerProcessor, loadGameProcessor, revealPlayProcessor, endRoundProcessor);
+        processor = new GenericCommandProcessor(gameStatusProcessor, startGameCommandProcessor, loginCommandProcessor, createGameCommandProcessor, joinGameCommandProcessor, playCardCommandProcessor, chooseWinnerProcessor, loadGameProcessor, revealPlayProcessor, endRoundProcessor);
         when(context.getPlayer()).thenReturn(Optional.of(loggedInPlayer));
         when(loginCommandProcessor.processMessage(loginCommand, context)).thenReturn(mockResponse);
         when(createGameCommandProcessor.processMessage(createGameCommand, context)).thenReturn(mockResponse);

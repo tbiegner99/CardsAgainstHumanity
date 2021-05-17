@@ -39,6 +39,15 @@ class GameEventActionCreator extends BaseActionCreator {
     });
   }
 
+  async loadGameStatus() {
+    const gameResponse = await this.websocketDatasource.sendCommand(GameCommands.GAME_STATUS, {});
+
+    this.dispatch({
+      type: GameActions.GAME_STATUS,
+      data: gameResponse
+    });
+  }
+
   async loadGameFromCode(code) {
     return this.loadGameFromIdOrCode(null, code);
   }

@@ -28,6 +28,14 @@ class CommandSerializer {
     };
   }
 
+  serializeNullCommand(commandName) {
+    return {
+      messageId: this.generateCommandId(),
+      commandName,
+      arguments: null
+    };
+  }
+
   serializeEmptyCommand(commandName) {
     return {
       messageId: this.generateCommandId(),
@@ -101,8 +109,10 @@ class CommandSerializer {
         return this.serializeRevealCommand(data);
       case GameCommands.CHOOSE_WINNER:
         return this.serializeChooseWinnerCommand(data);
+      case GameCommands.GAME_STATUS:
+        return this.serializeNullCommand(commandName);
       case GameCommands.END_ROUND:
-        return this.serializeEmptyCommand(GameCommands.END_ROUND);
+        return this.serializeEmptyCommand(commandName);
       default:
         throw new Error(`Unknown command name:${commandName}`);
     }
@@ -267,6 +277,7 @@ class CommandSerializer {
       case GameCommands.JOIN_GAME:
       case GameCommands.CREATE_GAME:
       case GameCommands.PLAY_CARD:
+      case GameCommands.GAME_STATUS:
         return this.deserializeGameResponse(data.response);
       default:
         throw new Error(`Unknown command name: ${commandName}`);

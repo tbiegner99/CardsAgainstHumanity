@@ -9,7 +9,8 @@ const mapStateToProps = (state) => {
   return {
     isCzar: roundStore.isCzar.value,
     gameId: gameStore.gameId.value,
-    onChangeRoute: (url) => GameActionCreator.changeUrl(url)
+    onChangeRoute: (url) => GameActionCreator.changeUrl(url),
+    onGameStatusPoll: () => GameActionCreator.loadGameStatus()
   };
 };
 

@@ -16,6 +16,20 @@ class LoadGameComponent extends React.Component {
 
   componentDidMount() {
     this.reloadGameIfNecessary();
+    const pollGameStatus = () => {
+      const { onGameStatusPoll, gameCode } = this.props;
+      if (gameCode && typeof onGameStatusPoll === 'function') {
+        onGameStatusPoll();
+      }
+    };
+
+    this.gamePoll = setInterval(pollGameStatus, 6000);
+  }
+
+  componentWillUnmount() {
+    if (this.gamePoll) {
+      this.clearInterval(this.gamePoll);
+    }
   }
 
   componentDidUpdate() {
@@ -39,7 +53,8 @@ const mapStateToProps = (state) => {
     waitingForPlays: roundStore.waitingForPlays.value,
     revealedPlays: roundStore.revealedPlays.value,
     numberOfPlays: roundStore.numberOfPlays.value,
-    winner: roundStore.winner.value
+    winner: roundStore.winner.value,
+    onGameStatusPoll: () => GameActionCreator.loadGameStatus()
   };
 };
 
