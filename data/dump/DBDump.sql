@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `Cards_Against_Humanity` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `Cards_Against_Humanity`;
 -- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
 -- Host: 192.168.2.216    Database: Cards_Against_Humanity
@@ -496,4 +498,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-20  2:54:32
+-- Dump completed on 2021-05-20  3:03:26
