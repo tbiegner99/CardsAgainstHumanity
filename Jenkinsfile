@@ -10,11 +10,7 @@ pipeline {
                        docker "node:16"
                     }
                     steps {
-                        git(
-                            url: "https://github.com/tbiegner99/CardsAgainstHumanity.git",
-                            branch: "master",
-                            changelog: true
-                        )
+
                         dir("ui") {
                             sh 'pwd'
                             sh 'ls'
@@ -31,11 +27,7 @@ pipeline {
 
                  stage("Build Backend") {
                     steps {
-                        git(
-                            url: "https://github.com/tbiegner99/CardsAgainstHumanity.git",
-                            branch: "master",
-                            changelog: true
-                        )
+
                         dir("server") {
                             sh 'docker build .'
 
