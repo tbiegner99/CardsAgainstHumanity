@@ -1,6 +1,6 @@
 import GameSocket from './GameSocket';
 
-const CONNECTION_URL = `{window.isSecureContext?'wss':'ws'}://${window.location.host}/api/cah/socket/playerConnection`;
+const CONNECTION_URL = `${window.isSecureContext?'wss':'ws'}://${window.location.host}/api/cah/socket/playerConnection`;
 
 class GameSocketManager {
   static gameSocket = null;
